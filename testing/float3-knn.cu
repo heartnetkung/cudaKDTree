@@ -21,24 +21,44 @@
 #include <limits>
 #include <iomanip>
 
-float3 *generatePoints(int N)
+Float20 *generatePoints(int N)
 {
   std::cout << "generating " << N <<  " points" << std::endl;
-  float3 *d_points = 0;
-  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(float3)));
+  Float20 *d_points = 0;
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   for (int i=0;i<N;i++) {
-    d_points[i].x = (float)drand48();
-    d_points[i].y = (float)drand48();
-    d_points[i].z = (float)drand48();
+    d_points[i].a = (float)drand48();
+    d_points[i].b = (float)drand48();
+    d_points[i].c = (float)drand48();
+    d_points[i].d = (float)drand48();
+    d_points[i].e = (float)drand48();
+    //5
+    d_points[i].f = (float)drand48();
+    d_points[i].g = (float)drand48();
+    d_points[i].h = (float)drand48();
+    d_points[i].i = (float)drand48();
+    d_points[i].j = (float)drand48();
+    //10
+    d_points[i].k = (float)drand48();
+    d_points[i].l = (float)drand48();
+    d_points[i].m = (float)drand48();
+    d_points[i].n = (float)drand48();
+    d_points[i].o = (float)drand48();
+    //15
+    d_points[i].p = (float)drand48();
+    d_points[i].q = (float)drand48();
+    d_points[i].r = (float)drand48();
+    d_points[i].s = (float)drand48();
+    d_points[i].t = (float)drand48();
   }
   return d_points;
 }
 
 // ==================================================================
 __global__ void d_knn50(float *d_results,
-                        float3 *d_queries,
+                        Float20 *d_queries,
                         int numQueries,
-                        float3 *d_nodes,
+                        Float20 *d_nodes,
                         int numNodes,
                         float maxRadius)
 {
@@ -48,16 +68,16 @@ __global__ void d_knn50(float *d_results,
   cukd::HeapCandidateList<50> result(maxRadius);
   float sqrDist
     = cukd::knn
-    <cukd::TrivialFloatPointTraits<float3>>
+    <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
   d_results[tid] = sqrtf(sqrDist);//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
   // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
 }
 
 void knn50(float *d_results,
-           float3 *d_queries,
+           Float20 *d_queries,
            int numQueries,
-           float3 *d_nodes,
+           Float20 *d_nodes,
            int numNodes,
            float maxRadius)
 {
@@ -90,19 +110,18 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  float3 *d_points = generatePoints(nPoints);
+  Float20 *d_points = generatePoints(nPoints);
 
   {
     double t0 = getCurrentTime();
     std::cout << "calling builder..." << std::endl;
-    // float dist2 = cukd::sqrDistance<cukd::TrivialFloatPointTraits<float3>>(queryPoint,points[i]);
-    cukd::buildTree<cukd::TrivialFloatPointTraits<float3>>(d_points,nPoints);
+    cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
     CUKD_CUDA_SYNC_CHECK();
     double t1 = getCurrentTime();
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  float3 *d_queries = generatePoints(nQueries);
+  Float20 *d_queries = generatePoints(nQueries);
   float  *d_results;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(float)));
 

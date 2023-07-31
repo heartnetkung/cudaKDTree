@@ -348,6 +348,33 @@ namespace cukd {
 
 } // ::cukd
 
+struct Float20
+{
+  const float a;
+  const float b;
+  const float c;
+  const float d;
+  const float e;
+  //5
+  const float f;
+  const float g;
+  const float h;
+  const float i;
+  const float j;
+  //10
+  const float k;
+  const float l;
+  const float m;
+  const float n;
+  const float o;
+  //15
+  const float p;
+  const float q;
+  const float r;
+  const float s;
+  const float t;
+};
+
 #define CUKD_CUDA_CHECK( call )                                         \
   {                                                                     \
     cudaError_t rc = call;                                              \
