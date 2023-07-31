@@ -35,104 +35,6 @@ float3 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn4(float *d_results,
-                       float3 *d_queries,
-                       int numQueries,
-                       float3 *d_nodes,
-                       int numNodes,
-                       float maxRadius)
-{
-  int tid = threadIdx.x+blockIdx.x*blockDim.x;
-  if (tid >= numQueries) return;
-
-  cukd::FixedCandidateList<4> result(maxRadius);
-  float sqrDist
-    = cukd::knn
-    <cukd::TrivialFloatPointTraits<float3>>
-    (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrtf(sqrDist);//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
-  // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
-}
-
-void knn4(float *d_results,
-          float3 *d_queries,
-          int numQueries,
-          float3 *d_nodes,
-          int numNodes,
-          float maxRadius)
-{
-  int bs = 128;
-  int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn4<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
-}
-
-
-// ==================================================================
-__global__ void d_knn8(float *d_results,
-                       float3 *d_queries,
-                       int numQueries,
-                       float3 *d_nodes,
-                       int numNodes,
-                       float maxRadius)
-{
-  int tid = threadIdx.x+blockIdx.x*blockDim.x;
-  if (tid >= numQueries) return;
-
-  cukd::FixedCandidateList<8> result(maxRadius);
-  float sqrDist
-    = cukd::knn
-    <cukd::TrivialFloatPointTraits<float3>>
-    (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrtf(sqrDist);//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
-}
-
-void knn8(float *d_results,
-          float3 *d_queries,
-          int numQueries,
-          float3 *d_nodes,
-          int numNodes,
-          float maxRadius)
-{
-  int bs = 128;
-  int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn8<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
-}
-
-
-// ==================================================================
-__global__ void d_knn20(float *d_results,
-                        float3 *d_queries,
-                        int numQueries,
-                        float3 *d_nodes,
-                        int numNodes,
-                        float maxRadius)
-{
-  int tid = threadIdx.x+blockIdx.x*blockDim.x;
-  if (tid >= numQueries) return;
-
-  cukd::HeapCandidateList<20> result(maxRadius);
-  float sqrDist
-    = cukd::knn
-    <cukd::TrivialFloatPointTraits<float3>>
-    (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrtf(sqrDist);//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
-  // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
-}
-
-void knn20(float *d_results,
-           float3 *d_queries,
-           int numQueries,
-           float3 *d_nodes,
-           int numNodes,
-           float maxRadius)
-{
-  int bs = 128;
-  int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn20<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
-}
-
-
-// ==================================================================
 __global__ void d_knn50(float *d_results,
                         float3 *d_queries,
                         int numQueries,
@@ -165,50 +67,12 @@ void knn50(float *d_results,
 }
 
 // ==================================================================
-inline void verifyKNN(int pointID, int k, float maxRadius,
-                      float3 *points, int numPoints,
-                      float3 queryPoint,
-                      float presumedResult)
-{
-  std::priority_queue<float> closest_k;
-  for (int i=0;i<numPoints;i++) {
-    float dist2 = cukd::sqrDistance<cukd::TrivialFloatPointTraits<float3>>(queryPoint,points[i]);
-    float d = sqrtf(dist2);//cukd::distance(queryP<oint,points[i]);
-    if (d <= maxRadius)
-      closest_k.push(d);
-    if (closest_k.size() > k)
-      closest_k.pop();
-  }
-
-  float actualResult = (closest_k.size() == k) ? closest_k.top() : maxRadius;
-
-
-  // check if the top 21-ish bits are the same; this will allow the
-  // compiler to produce slightly different results on host and device
-  // (usually caused by it uses madd's on one and separate +/* on
-  // t'other...
-  bool closeEnough
-    =  /* this catches result==inf:*/(actualResult == presumedResult)
-    || /* this catches bit errors: */(fabsf(actualResult - presumedResult) <= 1e-6f);
-  
-  if (!closeEnough) {
-    std::cout << "for point #" << pointID << ": "
-              << "verify found max dist " << std::setprecision(10) << actualResult
-              << " (bits " << (int*)(uint64_t)((uint32_t&)actualResult)
-              << "), knn reported " << presumedResult
-              << " (bits " << (int*)(uint64_t)((uint32_t&)presumedResult)
-              << "), difference is " << (actualResult-presumedResult)
-              << std::endl;
-    throw std::runtime_error("verification failed");
-  }
-}
 
 int main(int ac, const char **av)
 {
   using namespace cukd::common;
   
   int nPoints = 173;
-  bool verify = false;
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   size_t nQueries = 10*1000*1000;
   int nRepeats = 1;
@@ -216,8 +80,6 @@ int main(int ac, const char **av)
     std::string arg = av[i];
     if (arg[0] != '-')
       nPoints = std::stoi(arg);
-    else if (arg == "-v")
-      verify = true;
     else if (arg == "-nr")
       nRepeats = atoi(av[++i]);
     else if (arg == "-nq")
@@ -247,67 +109,6 @@ int main(int ac, const char **av)
 #if 1
   // ==================================================================
   {
-    std::cout << "running " << nRepeats << " sets of knn4 queries..." << std::endl;
-    double t0 = getCurrentTime();
-    for (int i=0;i<nRepeats;i++)
-      knn4(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
-    CUKD_CUDA_SYNC_CHECK();
-    double t1 = getCurrentTime();
-    std::cout << "done " << nRepeats << " iterations of knn4 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
-    std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
-    std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
-
-    if (verify) {
-      std::cout << "verifying result ..." << std::endl;
-      for (int i=0;i<nQueries;i++)
-        verifyKNN(i,4,maxQueryRadius,d_points,nPoints,d_queries[i],d_results[i]);
-      std::cout << "verification passed ... " << std::endl;
-    }
-  }
-
-  // ==================================================================
-  {
-    std::cout << "running " << nRepeats << " sets of knn8 queries..." << std::endl;
-    double t0 = getCurrentTime();
-    for (int i=0;i<nRepeats;i++)
-      knn8(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
-    CUKD_CUDA_SYNC_CHECK();
-    double t1 = getCurrentTime();
-    std::cout << "done " << nRepeats << " iterations of knn8 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
-    std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
-    std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
-
-    if (verify) {
-      std::cout << "verifying result ..." << std::endl;
-      for (int i=0;i<nQueries;i++)
-        verifyKNN(i,8,maxQueryRadius,d_points,nPoints,d_queries[i],d_results[i]);
-      std::cout << "verification passed ... " << std::endl;
-    }
-  }
-#endif
-  
-  // ==================================================================
-  {
-    std::cout << "running " << nRepeats << " sets of knn20 queries..." << std::endl;
-    double t0 = getCurrentTime();
-    for (int i=0;i<nRepeats;i++)
-      knn20(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
-    CUKD_CUDA_SYNC_CHECK();
-    double t1 = getCurrentTime();
-    std::cout << "done " << nRepeats << " iterations of knn20 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
-    std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
-    std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
-
-    if (verify) {
-      std::cout << "verifying result ..." << std::endl;
-      for (int i=0;i<nQueries;i++)
-        verifyKNN(i,20,maxQueryRadius,d_points,nPoints,d_queries[i],d_results[i]);
-      std::cout << "verification passed ... " << std::endl;
-    }
-  }
-
-  // ==================================================================
-  {
     std::cout << "running " << nRepeats << " sets of knn50 queries..." << std::endl;
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++)
@@ -317,13 +118,6 @@ int main(int ac, const char **av)
     std::cout << "done " << nRepeats << " iterations of knn50 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
     std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
     std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
-
-    if (verify) {
-      std::cout << "verifying result ..." << std::endl;
-      for (int i=0;i<nQueries;i++)
-        verifyKNN(i,50,maxQueryRadius,d_points,nPoints,d_queries[i],d_results[i]);
-      std::cout << "verification passed ... " << std::endl;
-    }
   }
 
 }
