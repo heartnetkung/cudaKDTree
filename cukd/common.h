@@ -350,29 +350,29 @@ namespace cukd {
 
 struct Float20
 {
-  const float a;
-  const float b;
-  const float c;
-  const float d;
-  const float e;
+  float x;
+  float b;
+  float c;
+  float d;
+  float e;
   //5
-  const float f;
-  const float g;
-  const float h;
-  const float i;
-  const float j;
+  float f;
+  float g;
+  float h;
+  float i;
+  float j;
   //10
-  const float k;
-  const float l;
-  const float m;
-  const float n;
-  const float o;
+  float k;
+  float l;
+  float m;
+  float n;
+  float o;
   //15
-  const float p;
-  const float q;
-  const float r;
-  const float s;
-  const float t;
+  float p;
+  float q;
+  float r;
+  float s;
+  float t;
 };
 
 #define CUKD_CUDA_CHECK( call )                                         \

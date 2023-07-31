@@ -27,7 +27,7 @@ Float20 *generatePoints(int N)
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   for (int i=0;i<N;i++) {
-    d_points[i].a = (float)drand48();
+    d_points[i].x = (float)drand48();
     d_points[i].b = (float)drand48();
     d_points[i].c = (float)drand48();
     d_points[i].d = (float)drand48();
