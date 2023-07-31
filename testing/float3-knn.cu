@@ -106,7 +106,6 @@ int main(int ac, const char **av)
   float  *d_results;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(float)));
 
-#if 1
   // ==================================================================
   {
     std::cout << "running " << nRepeats << " sets of knn50 queries..." << std::endl;
