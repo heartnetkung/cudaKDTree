@@ -101,52 +101,31 @@ Float20 *readPoints(const char* file, int N)
   while (fgets(line, 100, stream))
   {
     char* tmp = strdup(line);
-    char* number;
     point = d_points[i++];
 
-    number = strtok(tmp, " ");
     point.x = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.b = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.c = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.d = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.e = (float)atof(strtok(tmp, " "));
+    point.b = (float)atof(strtok(NULL, " "));
+    point.c = (float)atof(strtok(NULL, " "));
+    point.d = (float)atof(strtok(NULL, " "));
+    point.e = (float)atof(strtok(NULL, " "));
     //5
-    number = strtok(NULL, " ");
-    point.f = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.g = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.h = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.i = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.j = (float)atof(strtok(tmp, " "));
+    point.f = (float)atof(strtok(NULL, " "));
+    point.g = (float)atof(strtok(NULL, " "));
+    point.h = (float)atof(strtok(NULL, " "));
+    point.i = (float)atof(strtok(NULL, " "));
+    point.j = (float)atof(strtok(NULL, " "));
     //10
-    number = strtok(NULL, " ");
-    point.k = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.l = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.m = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.n = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.o = (float)atof(strtok(tmp, " "));
+    point.k = (float)atof(strtok(NULL, " "));
+    point.l = (float)atof(strtok(NULL, " "));
+    point.m = (float)atof(strtok(NULL, " "));
+    point.n = (float)atof(strtok(NULL, " "));
+    point.o = (float)atof(strtok(NULL, " "));
     //15
-    number = strtok(NULL, " ");
-    point.p = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.q = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.r = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.s = (float)atof(strtok(tmp, " "));
-    number = strtok(NULL, " ");
-    point.t = (float)atof(strtok(tmp, " "));
+    point.p = (float)atof(strtok(NULL, " "));
+    point.q = (float)atof(strtok(NULL, " "));
+    point.r = (float)atof(strtok(NULL, " "));
+    point.s = (float)atof(strtok(NULL, " "));
+    point.t = (float)atof(strtok(NULL, " "));
     free(tmp);
   }
   fclose(stream);
@@ -188,7 +167,7 @@ int main(int ac, const char **av)
   if(file != NULL){
     d_points = generatePoints(nPoints);
   }else{
-    d_points = readPoints(file, nPoints)
+    d_points = readPoints(file, nPoints);
   }
 
 
