@@ -164,7 +164,7 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t"){
       std::cout << "hello 0";
-      stream = fopen(av[++i], "r");
+      // stream = fopen(av[++i], "r");
       std::cout << "hello 0.1";
     }
     else
