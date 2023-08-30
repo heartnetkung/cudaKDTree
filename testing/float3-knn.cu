@@ -91,7 +91,7 @@ void knn500(float *d_results,
 
 Float20 *readPoints(int N)
 {
-  std::cout << "hello 1.1";
+  std::cout << "hello 1.1\n";
   using namespace cukd::common;
   FILE* stream = fopen("hello.txt", "r");
   char line[100];
@@ -99,7 +99,7 @@ Float20 *readPoints(int N)
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
 
-  std::cout << "hello 1.2";
+  std::cout << "hello 1.2\n";
   while (fgets(line, 100, stream))
   {
     char* tmp = strdup(line);
@@ -130,14 +130,14 @@ Float20 *readPoints(int N)
     free(tmp);
     i++;
   }
-  std::cout << "hello 1.3";
+  std::cout << "hello 1.3\n";
 
   fclose(stream);
   std::cout << "my_n_points" << N;
   std::cout << "first coords" << prettyDouble(d_points[0].x);
   std::cout << "second coords" << prettyDouble(d_points[0].b);
 
-  std::cout << "hello 1.4";
+  std::cout << "hello 1.4\n";
   return d_points;
 }
 
@@ -164,23 +164,23 @@ int main(int ac, const char **av)
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t"){
-      std::cout << "hello 0";
-      // isAssigned = 1;
+      std::cout << "hello 0\n";
+      isAssigned = 1;
       i++;
-      std::cout << "hello 0.1";
+      std::cout << "hello 0.1\n";
     }
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  std::cout << "hello1";
+  std::cout << "hello1\n";
   Float20 *d_points;
   if(isAssigned == 0){
     d_points = generatePoints(nPoints);
   }else{
     d_points = readPoints(nPoints);
   }
-  std::cout << "hello2";
+  std::cout << "hello2\n";
 
 
   {
