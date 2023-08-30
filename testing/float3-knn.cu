@@ -91,6 +91,7 @@ void knn500(float *d_results,
 
 Float20 *readPoints(const char* file, int N)
 {
+  using namespace cukd::common;
   FILE* stream = fopen(file, "r");
   char line[100];
   Float20 *d_points = 0;
@@ -158,7 +159,7 @@ int main(int ac, const char **av)
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t")
-      file = av[++i];
+      file = strdup(av[++i]);
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
