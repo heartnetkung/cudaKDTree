@@ -163,10 +163,11 @@ int main(int ac, const char **av)
       nQueries = atoi(av[++i]);
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
-    else if (arg == "-t")
+    else if (arg == "-t"){
       std::cout << "hello 0";
       file = av[++i].c_str();
       std::cout << "hello 0.1";
+    }
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
