@@ -97,37 +97,36 @@ Float20 *readPoints(const char* file, int N)
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
-  Float20 point;
 
   while (fgets(line, 100, stream))
   {
     char* tmp = strdup(line);
-    point = d_points[i++];
-
-    point.x = (float)atof(strtok(tmp, " "));
-    point.b = (float)atof(strtok(NULL, " "));
-    point.c = (float)atof(strtok(NULL, " "));
-    point.d = (float)atof(strtok(NULL, " "));
-    point.e = (float)atof(strtok(NULL, " "));
+    d_points[i].x = (float)atof(tmp);
+    d_points[i].b = (float)atof(strtok(NULL, " "));
+    d_points[i].c = (float)atof(strtok(NULL, " "));
+    d_points[i].d = (float)atof(strtok(NULL, " "));
+    d_points[i].e = (float)atof(strtok(NULL, " "));
     //5
-    point.f = (float)atof(strtok(NULL, " "));
-    point.g = (float)atof(strtok(NULL, " "));
-    point.h = (float)atof(strtok(NULL, " "));
-    point.i = (float)atof(strtok(NULL, " "));
-    point.j = (float)atof(strtok(NULL, " "));
+    d_points[i].f = (float)atof(strtok(NULL, " "));
+    d_points[i].g = (float)atof(strtok(NULL, " "));
+    d_points[i].h = (float)atof(strtok(NULL, " "));
+    d_points[i].i = (float)atof(strtok(NULL, " "));
+    d_points[i].j = (float)atof(strtok(NULL, " "));
     //10
-    point.k = (float)atof(strtok(NULL, " "));
-    point.l = (float)atof(strtok(NULL, " "));
-    point.m = (float)atof(strtok(NULL, " "));
-    point.n = (float)atof(strtok(NULL, " "));
-    point.o = (float)atof(strtok(NULL, " "));
+    d_points[i].k = (float)atof(strtok(NULL, " "));
+    d_points[i].l = (float)atof(strtok(NULL, " "));
+    d_points[i].m = (float)atof(strtok(NULL, " "));
+    d_points[i].n = (float)atof(strtok(NULL, " "));
+    d_points[i].o = (float)atof(strtok(NULL, " "));
     //15
-    point.p = (float)atof(strtok(NULL, " "));
-    point.q = (float)atof(strtok(NULL, " "));
-    point.r = (float)atof(strtok(NULL, " "));
-    point.s = (float)atof(strtok(NULL, " "));
-    point.t = (float)atof(strtok(NULL, " "));
+    d_points[i].p = (float)atof(strtok(NULL, " "));
+    d_points[i].q = (float)atof(strtok(NULL, " "));
+    d_points[i].r = (float)atof(strtok(NULL, " "));
+    d_points[i].s = (float)atof(strtok(NULL, " "));
+    d_points[i].t = (float)atof(strtok(NULL, " "));
+
     free(tmp);
+    i++;
   }
   fclose(stream);
   std::cout << "my_n_points" << N;
@@ -164,6 +163,7 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
+  std::cout << "hello" << file;
   Float20 *d_points;
   if(file == NULL){
     d_points = generatePoints(nPoints);
