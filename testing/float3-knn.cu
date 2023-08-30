@@ -165,7 +165,8 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t"){
       std::cout << "hello 0";
-      file = strdup(av[++i].c_str());
+      std::string arg2 = av[++i];
+      file = arg2.c_str();
       std::cout << "hello 0.1";
     }
     else
