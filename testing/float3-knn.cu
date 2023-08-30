@@ -91,7 +91,7 @@ void knn500(float *d_results,
 
 Float20 *readPoints(int N)
 {
-  N=2
+  N=2;
   std::cout << "hello 1.1\n";
   using namespace cukd::common;
   FILE* stream = fopen("hello.txt", "r");
