@@ -106,7 +106,7 @@ Float20 *readPoints(int N)
     std::cout << "hello 1.21\n";
     char* tmp = strdup(line);
     std::cout << "hello 1.22\n";
-    d_points[i].x = (float)atof(tmp);
+    d_points[i].x = (float)atof(strtok(tmp, " "));
     std::cout << "hello 1.23\n";
     d_points[i].b = (float)atof(strtok(NULL, " "));
     std::cout << "hello 1.24\n";
