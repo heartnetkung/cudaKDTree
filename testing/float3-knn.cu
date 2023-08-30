@@ -151,7 +151,7 @@ int main(int ac, const char **av)
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   size_t nQueries = 10*1000*1000;
   int nRepeats = 1;
-  char * file = NULL;
+  char* file = NULL;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -164,7 +164,9 @@ int main(int ac, const char **av)
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t")
-      file = strdup(av[++i]);
+      std::cout << "hello 0";
+      file = av[++i].c_str();
+      std::cout << "hello 0.1";
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
