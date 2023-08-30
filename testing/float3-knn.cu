@@ -95,55 +95,57 @@ Float20 *readPoints(const char* file, int N)
   char line[100];
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
+  int i=0;
 
   while (fgets(line, 100, stream))
   {
     char* tmp = strdup(line);
     char* number;
+    point = d_points[i++];
 
     number = strtok(tmp, " ");
-    d_points[i].x = (float)atof(strtok(tmp, " "));
+    point.x = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].b = (float)atof(strtok(tmp, " "));
+    point.b = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].c = (float)atof(strtok(tmp, " "));
+    point.c = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].d = (float)atof(strtok(tmp, " "));
+    point.d = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].e = (float)atof(strtok(tmp, " "));
+    point.e = (float)atof(strtok(tmp, " "));
     //5
     number = strtok(NULL, " ");
-    d_points[i].f = (float)atof(strtok(tmp, " "));
+    point.f = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].g = (float)atof(strtok(tmp, " "));
+    point.g = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].h = (float)atof(strtok(tmp, " "));
+    point.h = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].i = (float)atof(strtok(tmp, " "));
+    point.i = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].j = (float)atof(strtok(tmp, " "));
+    point.j = (float)atof(strtok(tmp, " "));
     //10
     number = strtok(NULL, " ");
-    d_points[i].k = (float)atof(strtok(tmp, " "));
+    point.k = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].l = (float)atof(strtok(tmp, " "));
+    point.l = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].m = (float)atof(strtok(tmp, " "));
+    point.m = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].n = (float)atof(strtok(tmp, " "));
+    point.n = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].o = (float)atof(strtok(tmp, " "));
+    point.o = (float)atof(strtok(tmp, " "));
     //15
     number = strtok(NULL, " ");
-    d_points[i].p = (float)atof(strtok(tmp, " "));
+    point.p = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].q = (float)atof(strtok(tmp, " "));
+    point.q = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].r = (float)atof(strtok(tmp, " "));
+    point.r = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].s = (float)atof(strtok(tmp, " "));
+    point.s = (float)atof(strtok(tmp, " "));
     number = strtok(NULL, " ");
-    d_points[i].t = (float)atof(strtok(tmp, " "));
+    point.t = (float)atof(strtok(tmp, " "));
     free(tmp);
   }
   fclose(stream);
