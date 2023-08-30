@@ -152,7 +152,7 @@ int main(int ac, const char **av)
   size_t nQueries = 10*1000*1000;
   int nRepeats = 1;
   const char* file;
-  int isAssigned = 0
+  int isAssigned = 0;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
