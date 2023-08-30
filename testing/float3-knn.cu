@@ -20,6 +20,9 @@
 #include <queue>
 #include <limits>
 #include <iomanip>
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
 
 Float20 *generatePoints(int N)
 {
@@ -55,7 +58,7 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn50(float *d_results,
+__global__ void d_knn500(float *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -65,7 +68,7 @@ __global__ void d_knn50(float *d_results,
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  cukd::HeapCandidateList<50> result(maxRadius);
+  cukd::HeapCandidateList<500> result(maxRadius);
   float sqrDist
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
@@ -74,7 +77,7 @@ __global__ void d_knn50(float *d_results,
   // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
 }
 
-void knn50(float *d_results,
+void knn500(float *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -83,7 +86,71 @@ void knn50(float *d_results,
 {
   int bs = 128;
   int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn50<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
+  d_knn500<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
+}
+
+Float20 *readPoints(const char* file, int N)
+{
+  FILE* stream = fopen(file, "r");
+  char line[100];
+  Float20 *d_points = 0;
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
+
+  while (fgets(line, 100, stream))
+  {
+    char* tmp = strdup(line);
+    char* number;
+
+    number = strtok(tmp, " ");
+    d_points[i].x = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].b = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].c = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].d = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].e = (float)atof(strtok(tmp, " "));
+    //5
+    number = strtok(NULL, " ");
+    d_points[i].f = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].g = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].h = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].i = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].j = (float)atof(strtok(tmp, " "));
+    //10
+    number = strtok(NULL, " ");
+    d_points[i].k = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].l = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].m = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].n = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].o = (float)atof(strtok(tmp, " "));
+    //15
+    number = strtok(NULL, " ");
+    d_points[i].p = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].q = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].r = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].s = (float)atof(strtok(tmp, " "));
+    number = strtok(NULL, " ");
+    d_points[i].t = (float)atof(strtok(tmp, " "));
+    free(tmp);
+  }
+  fclose(stream);
+  std::cout << "my_n_points" << N;
+  std::cout << "first coords" << prettyDouble(d_points[0].x);
+  std::cout << "second coords" << prettyDouble(d_points[0].b);
+  return d_points;
 }
 
 // ==================================================================
@@ -96,6 +163,8 @@ int main(int ac, const char **av)
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   size_t nQueries = 10*1000*1000;
   int nRepeats = 1;
+  char * file = NULL;
+
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
     if (arg[0] != '-')
@@ -106,11 +175,19 @@ int main(int ac, const char **av)
       nQueries = atoi(av[++i]);
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
+    else if (arg == "-t")
+      file = av[++i];
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points = generatePoints(nPoints);
+  Float20 *d_points;
+  if(file != NULL){
+    d_points = generatePoints(nPoints);
+  }else{
+    d_points = readPoints(file, nPoints)
+  }
+
 
   {
     double t0 = getCurrentTime();
@@ -127,13 +204,13 @@ int main(int ac, const char **av)
 
   // ==================================================================
   {
-    std::cout << "running " << nRepeats << " sets of knn50 queries..." << std::endl;
+    std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++)
-      knn50(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+      knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
     CUKD_CUDA_SYNC_CHECK();
     double t1 = getCurrentTime();
-    std::cout << "done " << nRepeats << " iterations of knn50 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
+    std::cout << "done " << nRepeats << " iterations of knn500 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
     std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
     std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
   }
