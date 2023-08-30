@@ -151,7 +151,8 @@ int main(int ac, const char **av)
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   size_t nQueries = 10*1000*1000;
   int nRepeats = 1;
-  char* file = NULL;
+  const char* file;
+  int isAssigned = 0
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -165,8 +166,8 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t"){
       std::cout << "hello 0";
-      std::string arg2 = av[++i];
-      file = arg2.c_str();
+      file = av[++i];
+      isAssigned = 1;
       std::cout << "hello 0.1";
     }
     else
@@ -175,7 +176,7 @@ int main(int ac, const char **av)
   
   std::cout << "hello1";
   Float20 *d_points;
-  if(file == NULL){
+  if(isAssigned == 0){
     d_points = generatePoints(nPoints);
   }else{
     d_points = readPoints(file, nPoints);
