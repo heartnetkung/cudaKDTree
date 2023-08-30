@@ -168,6 +168,9 @@ int main(int ac, const char **av)
   }else{
     d_points = readPoints(nPoints);
   }
+  //HNK manual fix
+  Float20 *d_queries = d_points;
+  nQueries = nPoints;
 
 
   {
@@ -179,7 +182,6 @@ int main(int ac, const char **av)
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  Float20 *d_queries = generatePoints(nQueries);
   float  *d_results;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(float)));
 
@@ -187,8 +189,11 @@ int main(int ac, const char **av)
   {
     std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
     double t0 = getCurrentTime();
-    for (int i=0;i<nRepeats;i++)
+    for (int i=0;i<nRepeats;i++){
       knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+      for(int j=0;j<nQueries;j++)
+        std::cout << " closest distances are " << prettyDouble(d_results[j]) << " \n";
+    }
     CUKD_CUDA_SYNC_CHECK();
     double t1 = getCurrentTime();
     std::cout << "done " << nRepeats << " iterations of knn500 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
