@@ -192,7 +192,7 @@ int main(int ac, const char **av)
     for (int i=0;i<nRepeats;i++){
       knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
       for(int j=0;j<nQueries;j++)
-        std::cout << " closest distances are " << prettyDouble(d_results[j]) << " \n";
+        std::cout << " closest distances are " << d_results[j] << " \n";
     }
     CUKD_CUDA_SYNC_CHECK();
     double t1 = getCurrentTime();
