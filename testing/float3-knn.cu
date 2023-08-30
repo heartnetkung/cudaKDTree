@@ -165,6 +165,7 @@ int main(int ac, const char **av)
     else if (arg == "-t"){
       std::cout << "hello 0";
       // stream = fopen(av[++i], "r");
+      ++i;
       std::cout << "hello 0.1";
     }
     else
