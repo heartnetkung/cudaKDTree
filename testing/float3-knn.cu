@@ -65,8 +65,8 @@ __global__ void d_knn500(int *d_results,
                         int numNodes,
                         float maxRadius)
 {
-  int tid = threadIdx.x+blockIdx.x*blockDim.x;
-  if (tid >= numQueries) return;
+  // int tid = threadIdx.x+blockIdx.x*blockDim.x;
+  // if (tid >= numQueries) return;
 
   cukd::HeapCandidateList<500> result(maxRadius);
   int sqrDist
