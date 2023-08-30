@@ -91,6 +91,7 @@ void knn500(float *d_results,
 
 Float20 *readPoints(const char* file, int N)
 {
+  std::cout << "hello 1.1";
   using namespace cukd::common;
   FILE* stream = fopen(file, "r");
   char line[100];
@@ -98,6 +99,7 @@ Float20 *readPoints(const char* file, int N)
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
 
+  std::cout << "hello 1.2";
   while (fgets(line, 100, stream))
   {
     char* tmp = strdup(line);
@@ -128,10 +130,14 @@ Float20 *readPoints(const char* file, int N)
     free(tmp);
     i++;
   }
+  std::cout << "hello 1.3";
+
   fclose(stream);
   std::cout << "my_n_points" << N;
   std::cout << "first coords" << prettyDouble(d_points[0].x);
   std::cout << "second coords" << prettyDouble(d_points[0].b);
+
+  std::cout << "hello 1.4";
   return d_points;
 }
 
@@ -163,13 +169,14 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  std::cout << "hello" << file;
+  std::cout << "hello1";
   Float20 *d_points;
   if(file == NULL){
     d_points = generatePoints(nPoints);
   }else{
     d_points = readPoints(file, nPoints);
   }
+  std::cout << "hello2";
 
 
   {
