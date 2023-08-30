@@ -96,6 +96,7 @@ Float20 *readPoints(const char* file, int N)
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
+  Float20 point;
 
   while (fgets(line, 100, stream))
   {
