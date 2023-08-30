@@ -165,7 +165,7 @@ int main(int ac, const char **av)
   }
   
   Float20 *d_points;
-  if(file != NULL){
+  if(file == NULL){
     d_points = generatePoints(nPoints);
   }else{
     d_points = readPoints(file, nPoints);
