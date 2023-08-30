@@ -89,11 +89,10 @@ void knn500(float *d_results,
   d_knn500<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
 
-Float20 *readPoints(const char* file, int N)
+Float20 *readPoints(FILE* stream, int N)
 {
   std::cout << "hello 1.1";
   using namespace cukd::common;
-  FILE* stream = fopen(file, "r");
   char line[100];
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
@@ -151,8 +150,7 @@ int main(int ac, const char **av)
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   size_t nQueries = 10*1000*1000;
   int nRepeats = 1;
-  const char* file;
-  int isAssigned = 0;
+  FILE* stream = NULL;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -166,8 +164,7 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t"){
       std::cout << "hello 0";
-      file = av[++i];
-      isAssigned = 1;
+      stream = fopen(av[++i], "r");
       std::cout << "hello 0.1";
     }
     else
@@ -176,10 +173,10 @@ int main(int ac, const char **av)
   
   std::cout << "hello1";
   Float20 *d_points;
-  if(isAssigned == 0){
+  if(stream == NULL){
     d_points = generatePoints(nPoints);
   }else{
-    d_points = readPoints(file, nPoints);
+    d_points = readPoints(stream, nPoints);
   }
   std::cout << "hello2";
 
