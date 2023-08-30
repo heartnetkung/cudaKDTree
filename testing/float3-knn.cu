@@ -165,7 +165,7 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t"){
       std::cout << "hello 0";
-      isAssigned = 1;
+      // isAssigned = 1;
       i++;
       std::cout << "hello 0.1";
     }
