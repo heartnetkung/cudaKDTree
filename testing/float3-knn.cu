@@ -91,20 +91,25 @@ void knn500(float *d_results,
 
 Float20 *readPoints(int N)
 {
+  N=2
   std::cout << "hello 1.1\n";
   using namespace cukd::common;
   FILE* stream = fopen("hello.txt", "r");
-  char line[100];
+  char line[200];
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
 
   std::cout << "hello 1.2\n";
-  while (fgets(line, 100, stream))
+  while (fgets(line, 200, stream))
   {
+    std::cout << "hello 1.21\n";
     char* tmp = strdup(line);
+    std::cout << "hello 1.22\n";
     d_points[i].x = (float)atof(tmp);
+    std::cout << "hello 1.23\n";
     d_points[i].b = (float)atof(strtok(NULL, " "));
+    std::cout << "hello 1.24\n";
     d_points[i].c = (float)atof(strtok(NULL, " "));
     d_points[i].d = (float)atof(strtok(NULL, " "));
     d_points[i].e = (float)atof(strtok(NULL, " "));
