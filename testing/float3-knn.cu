@@ -169,7 +169,7 @@ int main(int ac, const char **av)
     d_points = readPoints(nPoints);
   }
   //HNK manual fix
-  Float20 *d_queries = readPoints(nPoints);
+  Float20 *d_queries = d_points;
   nQueries = nPoints;
 
 
