@@ -180,11 +180,11 @@ int main(int ac, const char **av)
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  size_t nQueries = 10*1000*1000;
-  float4 *d_queries = generatePoints(nQueries);
+  // size_t nQueries = 10*1000*1000;
+  // float4 *d_queries = generatePoints(nQueries);
   //HNK manual fix
-  // float4 *d_queries = d_points;
-  // size_t nQueries = nPoints;
+  float4 *d_queries = d_points;
+  size_t nQueries = nPoints;
 
   float  *d_results;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(float)));
