@@ -58,7 +58,7 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn50(int *d_results,
+__global__ void d_knn5(int *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -66,9 +66,9 @@ __global__ void d_knn50(int *d_results,
                         float maxRadius)
 {
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
-  // if (tid >= numQueries) return;
+  if (tid >= numQueries) return;
 
-  cukd::HeapCandidateList<50> result(maxRadius);
+  cukd::HeapCandidateList<5> result(maxRadius);
   int sqrDist
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
@@ -77,7 +77,7 @@ __global__ void d_knn50(int *d_results,
   // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
 }
 
-void knn50(int *d_results,
+void knn5(int *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -86,7 +86,7 @@ void knn50(int *d_results,
 {
   int bs = 128;
   int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn50<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
+  d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
 
 Float20 *readPoints(int N)
@@ -190,7 +190,7 @@ int main(int ac, const char **av)
     std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++){
-      knn50(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+      knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
       for(int j=0;j<nQueries;j++)
         std::cout << " closest distances are " << d_results[j] << " \n";
     }
