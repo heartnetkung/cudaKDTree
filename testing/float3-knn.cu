@@ -191,10 +191,12 @@ int main(int ac, const char **av)
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++){
       knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+    }
+    CUKD_CUDA_SYNC_CHECK();
+    for (int i=0;i<nRepeats;i++){
       for(int j=0;j<nQueries;j++)
         std::cout << " closest distances are " << d_results[j] << " \n";
     }
-    CUKD_CUDA_SYNC_CHECK();
     double t1 = getCurrentTime();
     std::cout << "done " << nRepeats << " iterations of knn500 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
     std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
