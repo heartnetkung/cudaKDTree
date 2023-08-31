@@ -107,7 +107,7 @@ __global__ void d_knn5(int *d_results,
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  cukd::HeapCandidateList<5> result(maxRadius);
+  cukd::FixedCandidateList<5> result(maxRadius);
   d_results[tid] = sqrtf(cukd::knn
                          <cukd::TrivialFloatPointTraits<float4>>
                          (result,d_queries[tid],d_nodes,numNodes));
