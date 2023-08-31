@@ -58,7 +58,7 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn5(float *d_results,
+__global__ void d_knn5(int *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -73,11 +73,11 @@ __global__ void d_knn5(float *d_results,
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrtf(sqrDist);//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
+  d_results[tid] = sqrDist;//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
   // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
 }
 
-void knn5(float *d_results,
+void knn5(int *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -182,7 +182,7 @@ int main(int ac, const char **av)
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  float  *d_results;
+  int  *d_results;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(int)));
 
   // ==================================================================

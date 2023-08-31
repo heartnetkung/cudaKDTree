@@ -134,7 +134,7 @@ namespace cukd {
     typename CandidateList
     >
   inline __device__
-  float knn(CandidateList &currentlyClosest,
+  int knn(CandidateList &currentlyClosest,
             typename math_point_traits_t::point_t queryPoint,
             const typename node_point_traits_t::point_t *d_nodes,
             int N)
@@ -210,7 +210,9 @@ namespace cukd {
         // this can only (and will) happen if and only if we come from a
         // child, arrive at the root, and decide to go to the parent of
         // the root ... while means we're done.
-        return maxRadius2;
+
+        // return maxRadius2;
+        return currentlyClosest.decode_pointID(currentlyClosest.entry[0])
     
       prev = curr;
       curr = next;
