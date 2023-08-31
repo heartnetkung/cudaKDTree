@@ -61,7 +61,7 @@ float4 *readPoints(int N)
     free(tmp);
     i++;
   }
-  std::cout << "nline" << prettyDouble(d_points[i].w) << std::endl;
+  std::cout << prettyDouble(N) << "nline" << prettyDouble(i) << std::endl;
 
   fclose(stream);
 
