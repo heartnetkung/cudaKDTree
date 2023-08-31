@@ -69,11 +69,11 @@ __global__ void d_knn5(int *d_results,
   if (tid >= numQueries) return;
 
   cukd::HeapCandidateList<5> result(maxRadius);
-  int sqrDist
+  float sqrDist
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrDist;//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
+  d_results[tid] = sqrtf(sqrDist);//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
   // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
 }
 
