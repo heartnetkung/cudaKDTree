@@ -212,7 +212,7 @@ namespace cukd {
         // the root ... while means we're done.
 
         // return maxRadius2;
-        return curr;
+        return currentlyClosest.decode_pointID(currentlyClosest.entry[0]);
     
       prev = curr;
       curr = next;
