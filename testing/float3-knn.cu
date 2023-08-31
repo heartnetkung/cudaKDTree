@@ -68,6 +68,33 @@ float4 *readPoints(int N)
   return d_points;
 }
 
+float4 *readPoints2(int N)
+{
+  using namespace cukd::common;
+  FILE* stream = fopen("hello.txt", "r");
+  char line[100];
+  float4 *d_points = 0;
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(float4)));
+  int i=0;
+
+  while (fgets(line, 100, stream))
+  {
+    char* tmp = strdup(line);
+    d_points[i].x = (float)atof(strtok(tmp, " "));
+    d_points[i].y = (float)atof(strtok(NULL, " "));
+    d_points[i].z = (float)atof(strtok(NULL, " "));
+    d_points[i].w = (float)atof(strtok(NULL, " "))+3f;
+    std::cout << prettyDouble(d_points[i].w) << std::endl;
+    free(tmp);
+    i++;
+  }
+  std::cout << prettyDouble(N) << "nline" << prettyDouble(i) << std::endl;
+
+  fclose(stream);
+
+  return d_points;
+}
+
 // ==================================================================
 __global__ void d_knn50(float *d_results,
                         float4 *d_queries,
@@ -183,7 +210,7 @@ int main(int ac, const char **av)
   // size_t nQueries = 10*1000*1000;
   // float4 *d_queries = generatePoints(nQueries);
   //HNK manual fix
-  float4 *d_queries = d_points;
+  float4 *d_queries = readPoints2(nPoints);
   size_t nQueries = nPoints;
 
   float  *d_results;
