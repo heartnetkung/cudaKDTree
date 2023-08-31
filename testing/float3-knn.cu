@@ -142,7 +142,7 @@ int main(int ac, const char **av)
   
   int nPoints = 173;
   float maxQueryRadius = std::numeric_limits<float>::infinity();
-  size_t nQueries = 10*1000*1000;
+  int nQueries = 10*1000*1000;
   int nRepeats = 1;
   int isAssigned = 0;
 
@@ -169,8 +169,8 @@ int main(int ac, const char **av)
     d_points = readPoints(nPoints);
   }
   //HNK manual fix
-  Float20 *d_queries = generatePoints(nQueries);
-  // nQueries = nPoints;
+  Float20 *d_queries = readPoints(nPoints);
+  nQueries = nPoints;
 
 
   {
