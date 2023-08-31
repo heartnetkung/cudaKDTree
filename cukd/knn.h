@@ -210,7 +210,7 @@ namespace cukd {
         // this can only (and will) happen if and only if we come from a
         // child, arrive at the root, and decide to go to the parent of
         // the root ... while means we're done.
-        return currentlyClosest.decode_pointID(currentlyClosest.entry[1]);
+        return currentlyClosest.decode_pointID(currentlyClosest.entry[2]);
     
       prev = curr;
       curr = next;
