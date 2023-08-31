@@ -57,6 +57,7 @@ float4 *readPoints(int N)
     d_points[i].y = (float)atof(strtok(NULL, " "));
     d_points[i].z = (float)atof(strtok(NULL, " "));
     d_points[i].w = (float)atof(strtok(NULL, " "));
+    std::cout << prettyDouble(d_points[i].w) << std::endl;
     free(tmp);
     i++;
   }
