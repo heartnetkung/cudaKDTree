@@ -231,7 +231,7 @@ int main(int ac, const char **av)
     std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
 
     for (int i=0;i<nQueries;i++)
-      std::cout << prettyDouble(d_results[i]) << "dresult\n";
+      std::cout << prettyDouble(d_results[i]) << " dresult\n";
     if (verify) {
       std::cout << "verifying result ..." << std::endl;
       // for (int i=0;i<nQueries;i++)
