@@ -200,6 +200,8 @@ int main(int ac, const char **av)
     std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
     std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
 
+    for (int i=0;i<nQueries;i++)
+      std::cout << prettyDouble(d_results[i]) << "\n";
     if (verify) {
       std::cout << "verifying result ..." << std::endl;
       for (int i=0;i<nQueries;i++)
