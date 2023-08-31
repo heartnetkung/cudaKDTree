@@ -212,7 +212,7 @@ int main(int ac, const char **av)
   // float4 *d_queries = generatePoints(nQueries);
   //HNK manual fix
   float4 *d_queries = readPoints2(nPoints);
-  size_t nQueries = nPoints;
+  int nQueries = nPoints;
 
   float  *d_results;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(float)));
