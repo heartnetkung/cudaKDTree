@@ -182,41 +182,43 @@ int leven1(char* x, int lenX, char* y, int lenY){
   return 1;
 }
 
-// ==================================================================
-
-int main(int ac, const char **av)
-{
-  char* x = "555";
-  char* y = "55555";
+void test_leven(){
+  char x[] = "555";
+  char y[] = "55555";
   int lenX = 3;
   int lenY = 5;
   std::cout << leven1(x,lenX,y,lenY) << "leven1\n";
 
-  *x = "555";
-  *y = "666";
+  char x2[] = "555";
+  char y2[] = "55555";
   lenX = 3;
   lenY = 3;
-  std::cout << leven1(x,lenX,y,lenY) << "leven2\n";
+  std::cout << leven1(x2,lenX,y2,lenY) << "leven2\n";
 
-  *x = "555";
-  *y = "556";
+  char x3[] = "555";
+  char y3[] = "556";
   lenX = 3;
   lenY = 3;
-  std::cout << leven1(x,lenX,y,lenY) << "leven3\n";
+  std::cout << leven1(x3,lenX,y3,lenY) << "leven3\n";
 
-  *x = "555";
-  *y = "55";
+  char x4[] = "555";
+  char y4[] = "55";
   lenX = 3;
   lenY = 2;
-  std::cout << leven1(x,lenX,y,lenY) << "leven4\n";
+  std::cout << leven1(x4,lenX,y4,lenY) << "leven4\n";
 
-  *x = "555";
-  *y = "5555";
+  char x5[] = "555";
+  char y5[] = "5555";
   lenX = 3;
   lenY = 4;
-  std::cout << leven1(x,lenX,y,lenY) << "leven5\n";
+  std::cout << leven1(x5,lenX,y5,lenY) << "leven5\n";
+}
 
+// ==================================================================
 
+int main(int ac, const char **av)
+{
+  test_leven()
   using namespace cukd::common;
   
   int nPoints = 173;
