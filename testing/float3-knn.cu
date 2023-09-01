@@ -236,7 +236,7 @@ int main(int ac, const char **av)
       for(int j=0;j<nQueries;j++){
         std::cout << "j: " << j << " \n";
         for(int k=0;k<nResult;k++)
-          std::cout << " closest point is " << (int)d_results[j][k] << " \n";
+          std::cout << " closest point is " << (int)d_results[j] << " \n";
       }
 
     double t1 = getCurrentTime();
