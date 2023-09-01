@@ -88,7 +88,7 @@ void knn5(uint64_t **d_results,
   d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
 // ==================================================================
-__global__ void d_knn500(int *d_results,
+__global__ void d_knn500(uint64_t **d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -99,14 +99,14 @@ __global__ void d_knn500(int *d_results,
   if (tid >= numQueries) return;
 
   cukd::FixedCandidateList<500> result(maxRadius);
-  float sqrDist
+  uint64_t *gpuResult
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrDist;
+  d_results[tid] = gpuResult;
 }
 
-void knn500(int *d_results,
+void knn500(uint64_t **d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
