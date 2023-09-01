@@ -100,29 +100,29 @@ void readPoints(int N, Float20 **d_points)
   while (fgets(line, 200, stream))
   {
     char* tmp = strdup(line);
-    Float20(*d_points[i]).x = (float)atof(strtok(tmp, " "));
-    Float20(*d_points[i]).b = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).c = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).d = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).e = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).x = (float)atof(strtok(tmp, " "));
+    ((Float20)*d_points[i]).b = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).c = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).d = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).e = (float)atof(strtok(NULL, " "));
     //5
-    Float20(*d_points[i]).f = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).g = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).h = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).i = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).j = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).f = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).g = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).h = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).i = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).j = (float)atof(strtok(NULL, " "));
     //10
-    Float20(*d_points[i]).k = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).l = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).m = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).n = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).o = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).k = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).l = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).m = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).n = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).o = (float)atof(strtok(NULL, " "));
     //15
-    Float20(*d_points[i]).p = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).q = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).r = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).s = (float)atof(strtok(NULL, " "));
-    Float20(*d_points[i]).t = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).p = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).q = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).r = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).s = (float)atof(strtok(NULL, " "));
+    ((Float20)*d_points[i]).t = (float)atof(strtok(NULL, " "));
 
     // *d_queries[i] = point;
     free(tmp);
