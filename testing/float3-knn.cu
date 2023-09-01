@@ -58,35 +58,36 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn5(int *d_results,
+__global__ void d_knn(int *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
                         int numNodes,
-                        float maxRadius)
+                        float maxRadius,
+                        int k)
 {
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  cukd::FixedCandidateList<5> result(maxRadius);
+  cukd::FixedCandidateList<k> result(maxRadius);
   float sqrDist
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrDist;//cukd::knn(result,d_queries[tid],d_nodes,numNodes));
-  // d_results[tid] = sqrtf(cukd::knn(result,d_queries[tid],d_nodes,numNodes));
+  d_results[tid] = sqrDist;
 }
 
-void knn5(int *d_results,
+void knn(int *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
            int numNodes,
-           float maxRadius)
+           float maxRadius,
+           int k)
 {
   int bs = 128;
   int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
+  d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius,k);
 }
 
 Float20 *readPoints(int N)
@@ -145,6 +146,7 @@ int main(int ac, const char **av)
   int nQueries = 10*1000*1000;
   int nRepeats = 1;
   int isAssigned = 0;
+  int k = 5;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -158,12 +160,15 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t")
       isAssigned = i++;
+    else if (arg == "-k")
+      k = atoi(av[++i]);
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
   Float20 *d_points;
   if(isAssigned == 0){
+    // TODO change to memcpy
     d_points = generatePoints(nPoints);
   }else{
     d_points = readPoints(nPoints);
@@ -190,7 +195,7 @@ int main(int ac, const char **av)
     std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++){
-      knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+      knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius,k);
     }
     CUKD_CUDA_SYNC_CHECK();
     for (int i=0;i<nRepeats;i++){
