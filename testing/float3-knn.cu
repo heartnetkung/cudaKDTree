@@ -93,7 +93,7 @@ void knn(int *d_results,
 Float20 *readPoints(int N)
 {
   using namespace cukd::common;
-  FILE* stream = fopen("hello.txt", "r");
+  FILE* stream = fopen("input.txt", "r");
   char line[200];
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
