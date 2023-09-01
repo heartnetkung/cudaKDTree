@@ -156,7 +156,7 @@ int main(int ac, const char **av)
   
   Float20 *d_points = 0;
   Float20 *d_queries = 0;
-  readPoints(nPoints,*d_points,*d_queries);
+  readPoints(nPoints,d_points,d_queries);
 
   cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
