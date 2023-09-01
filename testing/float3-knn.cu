@@ -186,8 +186,8 @@ int leven1(char* x, int lenX, char* y, int lenY){
 
 int main(int ac, const char **av)
 {
-  char x[6] = "555";
-  char y[6] = "55555";
+  char* x = "555";
+  char* y = "55555";
   int lenX = 3;
   int lenY = 5;
   std::cout << leven1(x,lenX,y,lenY) << "leven1\n";
