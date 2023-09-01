@@ -73,7 +73,7 @@ __global__ void d_knn5(uint64_t **d_results,
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = gpuResult;
+  d_results[tid] = result.entry;
 }
 
 void knn5(uint64_t **d_results,
@@ -103,7 +103,7 @@ __global__ void d_knn500(uint64_t **d_results,
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = gpuResult;
+  d_results[tid] = result.entry;
 }
 
 void knn500(uint64_t **d_results,
