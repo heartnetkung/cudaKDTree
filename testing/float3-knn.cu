@@ -124,29 +124,29 @@ Float20 *readPoints(int N, Float20 *d_points, Float20 *d_queries)
     d_points[i].s = (float)atof(strtok(NULL, " "));
     d_points[i].t = (float)atof(strtok(NULL, " "));
 
-    d_queries[i].x=d_points[i].x
-    d_queries[i].b=d_points[i].b
-    d_queries[i].c=d_points[i].c
-    d_queries[i].d=d_points[i].d
-    d_queries[i].e=d_points[i].e
+    d_queries[i].x=d_points[i].x;
+    d_queries[i].b=d_points[i].b;
+    d_queries[i].c=d_points[i].c;
+    d_queries[i].d=d_points[i].d;
+    d_queries[i].e=d_points[i].e;
     //5
-    d_queries[i].f=d_points[i].f
-    d_queries[i].g=d_points[i].g
-    d_queries[i].h=d_points[i].h
-    d_queries[i].i=d_points[i].i
-    d_queries[i].j=d_points[i].j
+    d_queries[i].f=d_points[i].f;
+    d_queries[i].g=d_points[i].g;
+    d_queries[i].h=d_points[i].h;
+    d_queries[i].i=d_points[i].i;
+    d_queries[i].j=d_points[i].j;
     //10
-    d_queries[i].k=d_points[i].k
-    d_queries[i].l=d_points[i].l
-    d_queries[i].m=d_points[i].m
-    d_queries[i].n=d_points[i].n
-    d_queries[i].o=d_points[i].o
+    d_queries[i].k=d_points[i].k;
+    d_queries[i].l=d_points[i].l;
+    d_queries[i].m=d_points[i].m;
+    d_queries[i].n=d_points[i].n;
+    d_queries[i].o=d_points[i].o;
     //15
-    d_queries[i].p=d_points[i].p
-    d_queries[i].q=d_points[i].q
-    d_queries[i].r=d_points[i].r
-    d_queries[i].s=d_points[i].s
-    d_queries[i].t=d_points[i].t
+    d_queries[i].p=d_points[i].p;
+    d_queries[i].q=d_points[i].q;
+    d_queries[i].r=d_points[i].r;
+    d_queries[i].s=d_points[i].s;
+    d_queries[i].t=d_points[i].t;
 
     free(tmp);
     i++;
