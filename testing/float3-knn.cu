@@ -150,10 +150,73 @@ void writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
   fclose(stream);
 }
 
+int leven1(char* x, int lenX, char* y, int lenY){
+  int diff = lenX-lenY;
+  if (diff > 1 || diff<-1)
+    return 0;
+
+  char* shorter = x;
+  char* longer = y
+  int lenShorter = lenX;
+  if (diff>0){
+    shorter = y;
+    longer = x;
+    lenShorter = lenY;
+  }
+
+  for(int i=0;i<lenShorter;i++){
+    if(shorter[i] == longer[i])
+      continue;
+    if(diff==0){
+      for(int j=i+1;j<lenShorter;j++)
+        if(shorter[j]!=longer[j])
+          return 0;
+      return 1;
+    }else{
+      for(int j=i;j<lenShorter;j++)
+        if(shorter[j]!=longer[j+1])
+          return 0;
+      return 1;
+    }
+  }
+  return 1;
+}
+
 // ==================================================================
 
 int main(int ac, const char **av)
 {
+  char x[5] = "555";
+  char y[5] = "55555";
+  int lenX = 3;
+  int lenY = 5;
+  std::cout << leven1(x,lenX,y,lenY) << "leven1\n";
+
+  x[] = "555";
+  y[] = "666";
+  lenX = 3;
+  lenY = 3;
+  std::cout << leven1(x,lenX,y,lenY) << "leven2\n";
+
+  x[] = "555";
+  y[] = "556";
+  lenX = 3;
+  lenY = 3;
+  std::cout << leven1(x,lenX,y,lenY) << "leven3\n";
+
+  x[] = "555";
+  y[] = "55";
+  lenX = 3;
+  lenY = 2;
+  std::cout << leven1(x,lenX,y,lenY) << "leven4\n";
+
+  x[] = "555";
+  y[] = "5555";
+  lenX = 3;
+  lenY = 4;
+  std::cout << leven1(x,lenX,y,lenY) << "leven5\n";
+
+
   using namespace cukd::common;
   
   int nPoints = 173;
