@@ -132,7 +132,7 @@ Float20 *readPoints(int N)
   return d_points;
 }
 
-Float20 *writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
+void writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
 {
   FILE* stream = fopen("output.txt", "w");
   for(int j=0;j<nQueries;j++){
