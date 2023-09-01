@@ -156,7 +156,7 @@ int leven1(char* x, int lenX, char* y, int lenY){
     return 0;
 
   char* shorter = x;
-  char* longer = y
+  char* longer = y;
   int lenShorter = lenX;
   if (diff>0){
     shorter = y;
@@ -186,8 +186,8 @@ int leven1(char* x, int lenX, char* y, int lenY){
 
 int main(int ac, const char **av)
 {
-  char x[5] = "555";
-  char y[5] = "55555";
+  char x[6] = "555";
+  char y[6] = "55555";
   int lenX = 3;
   int lenY = 5;
   std::cout << leven1(x,lenX,y,lenY) << "leven1\n";
