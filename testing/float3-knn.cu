@@ -68,16 +68,13 @@ __global__ void d_knn5(int *d_results,
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  cukd::FixedCandidateList<5> result(maxRadius);
+  cukd::HeapCandidateList<5> result(maxRadius);
   cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
   int offset = tid*5;
-  d_results[offset] = int(result.entry[0]);
-  d_results[offset+1] = int(result.entry[1]);
-  d_results[offset+2] = int(result.entry[2]);
-  d_results[offset+3] = int(result.entry[3]);
-  d_results[offset+4] = int(result.entry[4]);
+  for(int i=0;i<5;i++)
+    d_results[offset+i] = int(result.entry[i]);
 }
 
 void knn5(int *d_results,
@@ -102,16 +99,13 @@ __global__ void d_knn500(int *d_results,
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  cukd::FixedCandidateList<500> result(maxRadius);
+  cukd::HeapCandidateList<500> result(maxRadius);
   cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
   int offset = tid*500;
-  d_results[offset] = int(result.entry[0]);
-  d_results[offset+1] = int(result.entry[1]);
-  d_results[offset+2] = int(result.entry[2]);
-  d_results[offset+3] = int(result.entry[3]);
-  d_results[offset+4] = int(result.entry[4]);
+  for(int i=0;i<500;i++)
+    d_results[offset+i] = int(result.entry[i]);
 }
 
 void knn500(int *d_results,
@@ -180,18 +174,15 @@ int main(int ac, const char **av)
   
   int nPoints = 173;
   float maxQueryRadius = std::numeric_limits<float>::infinity();
-  int nQueries = 10*1000*1000;
-  int nRepeats = 1;
+  int nQueries = 173;
   int isAssigned = 0;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
-    if (arg[0] != '-')
+    if (arg[0] != '-'){
       nPoints = std::stoi(arg);
-    else if (arg == "-nr")
-      nRepeats = atoi(av[++i]);
-    else if (arg == "-nq")
-      nQueries = atoi(av[++i]);
+      nQueries = nPoints;
+    }
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t")
@@ -200,26 +191,12 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points;
-  if(isAssigned == 0){
-    // TODO change to memcpy
-    d_points = generatePoints(nPoints);
-  }else{
-    d_points = readPoints(nPoints);
-  }
+  Float20 *d_points = readPoints(nPoints);
   //HNK manual fix
   Float20 *d_queries = readPoints(nPoints);
-  nQueries = nPoints;
 
-
-  {
-    double t0 = getCurrentTime();
-    std::cout << "calling builder..." << std::endl;
-    cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
-    CUKD_CUDA_SYNC_CHECK();
-    double t1 = getCurrentTime();
-    std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
-  }
+  cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
+  CUKD_CUDA_SYNC_CHECK();
 
   int  *d_results;
   int nResult;
@@ -227,30 +204,26 @@ int main(int ac, const char **av)
     nResult=5;
   else
     nResult=500;
+
   CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(int)*nResult));
 
   // ==================================================================
-  {
-    std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
-    double t0 = getCurrentTime();
-    for (int i=0;i<nRepeats;i++){
-      if(nPoints<500)
-        knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
-      else
-        knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
-    }
-    CUKD_CUDA_SYNC_CHECK();
-    for (int i=0;i<nRepeats;i++)
-      for(int j=0;j<nQueries;j++){
-        std::cout << "j: " << j << " \n";
-        for(int k=0;k<nResult;k++)
-          std::cout << " closest point is " << d_results[j*nResult+k] << " \n";
-      }
 
-    double t1 = getCurrentTime();
-    std::cout << "done " << nRepeats << " iterations of knn500 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
-    std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;
-    std::cout << " ... or " << prettyDouble(nQueries*nRepeats/(t1-t0)) << " queries/s" << std::endl;
+  if(nPoints<500)
+    knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+  else
+    knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+
+  CUKD_CUDA_SYNC_CHECK();
+  for(int j=0;j<nQueries;j++){
+    std::cout << "j: " << j << " \n";
+    for(int k=0;k<nResult;k++){
+      index = d_results[j*nResult+k];
+      if (index != -1){
+        Float20 point = d_points[index];
+        std::cout << " closest point is " << point.x << " \n";
+      }
+    }
   }
 
 }
