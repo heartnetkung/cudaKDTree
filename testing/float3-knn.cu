@@ -192,26 +192,26 @@ int main(int ac, const char **av)
   int lenY = 5;
   std::cout << leven1(x,lenX,y,lenY) << "leven1\n";
 
-  x[] = "555";
-  y[] = "666";
+  x = "555";
+  y = "666";
   lenX = 3;
   lenY = 3;
   std::cout << leven1(x,lenX,y,lenY) << "leven2\n";
 
-  x[] = "555";
-  y[] = "556";
+  x = "555";
+  y = "556";
   lenX = 3;
   lenY = 3;
   std::cout << leven1(x,lenX,y,lenY) << "leven3\n";
 
-  x[] = "555";
-  y[] = "55";
+  x = "555";
+  y = "55";
   lenX = 3;
   lenY = 2;
   std::cout << leven1(x,lenX,y,lenY) << "leven4\n";
 
-  x[] = "555";
-  y[] = "5555";
+  x = "555";
+  y = "5555";
   lenX = 3;
   lenY = 4;
   std::cout << leven1(x,lenX,y,lenY) << "leven5\n";
