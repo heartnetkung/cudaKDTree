@@ -58,7 +58,7 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn5(int *d_results,
+__global__ void d_knn5(uint64_t **d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -69,14 +69,14 @@ __global__ void d_knn5(int *d_results,
   if (tid >= numQueries) return;
 
   cukd::FixedCandidateList<5> result(maxRadius);
-  float sqrDist
+  uint64_t *gpuResult
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = sqrDist;
+  d_results[tid] = gpuResult;
 }
 
-void knn5(int *d_results,
+void knn5(uint64_t **d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -213,8 +213,13 @@ int main(int ac, const char **av)
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  int  *d_results;
-  CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(int)));
+  uint64_t  **d_results;
+  int nResult;
+  if(nPoints<500)
+    nResult=5;
+  else
+    nResult=500;
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(uint64_t)*nResult));
 
   // ==================================================================
   {
@@ -227,10 +232,13 @@ int main(int ac, const char **av)
         knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
     }
     CUKD_CUDA_SYNC_CHECK();
-    for (int i=0;i<nRepeats;i++){
-      for(int j=0;j<nQueries;j++)
-        std::cout << " closest distances are " << d_results[j] << " \n";
-    }
+    for (int i=0;i<nRepeats;i++)
+      for(int j=0;j<nQueries;j++){
+        std::cout << "j: " << j << " \n";
+        for(int k=0;k<nResult;k++)
+          std::cout << " closest point is " << d_points[d_results[j][k]].x << " \n";
+      }
+
     double t1 = getCurrentTime();
     std::cout << "done " << nRepeats << " iterations of knn500 query, took " << prettyDouble(t1-t0) << "s" << std::endl;
     std::cout << " that's " << prettyDouble((t1-t0)/nRepeats) << "s per query (avg)..." << std::endl;

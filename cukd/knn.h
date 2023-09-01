@@ -134,7 +134,7 @@ namespace cukd {
     typename CandidateList
     >
   inline __device__
-  int knn(CandidateList &currentlyClosest,
+  uint64_t* knn(CandidateList &currentlyClosest,
             typename math_point_traits_t::point_t queryPoint,
             const typename node_point_traits_t::point_t *d_nodes,
             int N)
@@ -212,7 +212,7 @@ namespace cukd {
         // the root ... while means we're done.
 
         // return maxRadius2;
-        return currentlyClosest.decode_pointID(currentlyClosest.entry[4]);
+        return currentlyClosest.entry;
     
       prev = curr;
       curr = next;
