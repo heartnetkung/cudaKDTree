@@ -58,7 +58,7 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn5(uint64_t **d_results,
+__global__ void d_knn5(uint64_t *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -69,14 +69,18 @@ __global__ void d_knn5(uint64_t **d_results,
   if (tid >= numQueries) return;
 
   cukd::FixedCandidateList<5> result(maxRadius);
-  uint64_t *gpuResult
-    = cukd::knn
+  cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = result.entry;
+  offset = tid*5
+  d_results[offset] = result.entry[0];
+  d_results[offset+1] = result.entry[1];
+  d_results[offset+2] = result.entry[2];
+  d_results[offset+3] = result.entry[3];
+  d_results[offset+4] = result.entry[4];
 }
 
-void knn5(uint64_t **d_results,
+void knn5(uint64_t *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -88,7 +92,7 @@ void knn5(uint64_t **d_results,
   d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
 // ==================================================================
-__global__ void d_knn500(uint64_t **d_results,
+__global__ void d_knn500(uint64_t *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -99,14 +103,18 @@ __global__ void d_knn500(uint64_t **d_results,
   if (tid >= numQueries) return;
 
   cukd::FixedCandidateList<500> result(maxRadius);
-  uint64_t *gpuResult
-    = cukd::knn
+  cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  d_results[tid] = result.entry;
+  offset = tid*500
+  d_results[offset] = result.entry[0];
+  d_results[offset+1] = result.entry[1];
+  d_results[offset+2] = result.entry[2];
+  d_results[offset+3] = result.entry[3];
+  d_results[offset+4] = result.entry[4];
 }
 
-void knn500(uint64_t **d_results,
+void knn500(uint64_t *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -213,7 +221,7 @@ int main(int ac, const char **av)
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  uint64_t  **d_results;
+  uint64_t  *d_results;
   int nResult;
   if(nPoints<500)
     nResult=5;
@@ -236,7 +244,7 @@ int main(int ac, const char **av)
       for(int j=0;j<nQueries;j++){
         std::cout << "j: " << j << " \n";
         for(int k=0;k<nResult;k++)
-          std::cout << " closest point is " << d_results[j][k] << " \n";
+          std::cout << " closest point is " << d_results[j*nResult+k] << " \n";
       }
 
     double t1 = getCurrentTime();
