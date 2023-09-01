@@ -69,7 +69,8 @@ __global__ void d_knn(int *d_results,
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  cukd::FixedCandidateList<k> result(maxRadius);
+  const int k2 = k;
+  cukd::FixedCandidateList<k2> result(maxRadius);
   float sqrDist
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
