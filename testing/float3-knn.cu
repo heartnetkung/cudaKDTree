@@ -134,7 +134,7 @@ Float20 *readPoints(int N)
 
 Float20 *writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
 {
-  FILE* stream = fopen("output.txt", "r");
+  FILE* stream = fopen("output.txt", "w");
   for(int j=0;j<nQueries;j++){
     for(int k=0;k<nResult;k++){
       int index = d_results[j*nResult+k];
@@ -194,6 +194,7 @@ int main(int ac, const char **av)
 
   CUKD_CUDA_SYNC_CHECK();
   writePoints(nQueries, nResult, d_results, d_points);
+  std::cout << "success\n";
   // for(int j=0;j<nQueries;j++){
   //   std::cout << "j: " << j << " \n";
   //   for(int k=0;k<nResult;k++){
