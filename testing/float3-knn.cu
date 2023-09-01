@@ -88,13 +88,13 @@ void knn500(int *d_results,
 }
 // ==================================================================
 
-Float20 *readPoints(int N)
+Float20 *readPoints(int N,d_points,d_queries)
 {
   using namespace cukd::common;
   FILE* stream = fopen("input.txt", "r");
   char line[200];
-  Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_queries,N*sizeof(Float20)));
   int i=0;
 
   while (fgets(line, 200, stream))
@@ -123,6 +123,30 @@ Float20 *readPoints(int N)
     d_points[i].r = (float)atof(strtok(NULL, " "));
     d_points[i].s = (float)atof(strtok(NULL, " "));
     d_points[i].t = (float)atof(strtok(NULL, " "));
+
+    d_queries[i].x=d_points[i].x
+    d_queries[i].b=d_points[i].b
+    d_queries[i].c=d_points[i].c
+    d_queries[i].d=d_points[i].d
+    d_queries[i].e=d_points[i].e
+    //5
+    d_queries[i].f=d_points[i].f
+    d_queries[i].g=d_points[i].g
+    d_queries[i].h=d_points[i].h
+    d_queries[i].i=d_points[i].i
+    d_queries[i].j=d_points[i].j
+    //10
+    d_queries[i].k=d_points[i].k
+    d_queries[i].l=d_points[i].l
+    d_queries[i].m=d_points[i].m
+    d_queries[i].n=d_points[i].n
+    d_queries[i].o=d_points[i].o
+    //15
+    d_queries[i].p=d_points[i].p
+    d_queries[i].q=d_points[i].q
+    d_queries[i].r=d_points[i].r
+    d_queries[i].s=d_points[i].s
+    d_queries[i].t=d_points[i].t
 
     free(tmp);
     i++;
@@ -154,9 +178,13 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points = readPoints(nPoints);
-  //HNK manual fix
-  Float20 *d_queries = readPoints(nPoints);
+  // Float20 *d_points = readPoints(nPoints);
+  // //TODO read file only once?
+  // Float20 *d_queries = readPoints(nPoints);
+
+  Float20 *d_points = 0;
+  Float20 *d_queries = 0;
+  readPoints(nPoints,d_points,d_queries);
 
   cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
