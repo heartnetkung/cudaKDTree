@@ -58,7 +58,7 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn5(uint64_t *d_results,
+__global__ void d_knn5(int *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -73,14 +73,14 @@ __global__ void d_knn5(uint64_t *d_results,
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
   int offset = tid*5;
-  d_results[offset] = result.entry[0];
-  d_results[offset+1] = result.entry[1];
-  d_results[offset+2] = result.entry[2];
-  d_results[offset+3] = result.entry[3];
-  d_results[offset+4] = result.entry[4];
+  d_results[offset] = int(result.entry[0]);
+  d_results[offset+1] = int(result.entry[1]);
+  d_results[offset+2] = int(result.entry[2]);
+  d_results[offset+3] = int(result.entry[3]);
+  d_results[offset+4] = int(result.entry[4]);
 }
 
-void knn5(uint64_t *d_results,
+void knn5(int *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -92,7 +92,7 @@ void knn5(uint64_t *d_results,
   d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
 // ==================================================================
-__global__ void d_knn500(uint64_t *d_results,
+__global__ void d_knn500(int *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
@@ -107,14 +107,14 @@ __global__ void d_knn500(uint64_t *d_results,
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
   int offset = tid*500;
-  d_results[offset] = result.entry[0];
-  d_results[offset+1] = result.entry[1];
-  d_results[offset+2] = result.entry[2];
-  d_results[offset+3] = result.entry[3];
-  d_results[offset+4] = result.entry[4];
+  d_results[offset] = int(result.entry[0]);
+  d_results[offset+1] = int(result.entry[1]);
+  d_results[offset+2] = int(result.entry[2]);
+  d_results[offset+3] = int(result.entry[3]);
+  d_results[offset+4] = int(result.entry[4]);
 }
 
-void knn500(uint64_t *d_results,
+void knn500(int *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
@@ -221,13 +221,13 @@ int main(int ac, const char **av)
     std::cout << "done building tree, took " << prettyDouble(t1-t0) << "s" << std::endl;
   }
 
-  uint64_t  *d_results;
+  int  *d_results;
   int nResult;
   if(nPoints<500)
     nResult=5;
   else
     nResult=500;
-  CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(uint64_t)*nResult));
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_results,nQueries*sizeof(int)*nResult));
 
   // ==================================================================
   {
