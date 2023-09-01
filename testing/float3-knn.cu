@@ -95,10 +95,13 @@ Float20 *readPoints(int N)
   char line[200];
   Float20 *d_points = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
+  int i=0;
 
-  for(int i=0;i<N;i++)
+  while (fgets(line, 200, stream))
   {
-    fgets(line, 200, stream);
+    if(i==N)
+      break;
+
     char* tmp = strdup(line);
     d_points[i].x = (float)atof(strtok(tmp, " "));
     d_points[i].b = (float)atof(strtok(NULL, " "));
@@ -124,6 +127,7 @@ Float20 *readPoints(int N)
     d_points[i].s = (float)atof(strtok(NULL, " "));
     d_points[i].t = (float)atof(strtok(NULL, " "));
 
+    i++;
     free(tmp);
   }
 
