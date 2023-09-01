@@ -175,7 +175,6 @@ int main(int ac, const char **av)
   int nPoints = 173;
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   int nQueries = 173;
-  int isAssigned = 0;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -185,8 +184,6 @@ int main(int ac, const char **av)
     }
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
-    else if (arg == "-t")
-      isAssigned = i++;
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
@@ -218,7 +215,7 @@ int main(int ac, const char **av)
   for(int j=0;j<nQueries;j++){
     std::cout << "j: " << j << " \n";
     for(int k=0;k<nResult;k++){
-      index = d_results[j*nResult+k];
+      int index = d_results[j*nResult+k];
       if (index != -1){
         Float20 point = d_points[index];
         std::cout << " closest point is " << point.x << " \n";
