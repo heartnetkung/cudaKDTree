@@ -72,7 +72,7 @@ __global__ void d_knn5(uint64_t *d_results,
   cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  offset = tid*5;
+  int offset = tid*5;
   d_results[offset] = result.entry[0];
   d_results[offset+1] = result.entry[1];
   d_results[offset+2] = result.entry[2];
@@ -106,7 +106,7 @@ __global__ void d_knn500(uint64_t *d_results,
   cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
     (result,d_queries[tid],d_nodes,numNodes);
-  offset = tid*500;
+  int offset = tid*500;
   d_results[offset] = result.entry[0];
   d_results[offset+1] = result.entry[1];
   d_results[offset+2] = result.entry[2];
