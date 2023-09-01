@@ -58,19 +58,17 @@ Float20 *generatePoints(int N)
 }
 
 // ==================================================================
-__global__ void d_knn(int *d_results,
+__global__ void d_knn5(int *d_results,
                         Float20 *d_queries,
                         int numQueries,
                         Float20 *d_nodes,
                         int numNodes,
-                        float maxRadius,
-                        int k)
+                        float maxRadius)
 {
   int tid = threadIdx.x+blockIdx.x*blockDim.x;
   if (tid >= numQueries) return;
 
-  const int k2 = k;
-  cukd::FixedCandidateList<k2> result(maxRadius);
+  cukd::FixedCandidateList<5> result(maxRadius);
   float sqrDist
     = cukd::knn
     <cukd::TrivialFloatPointTraits<Float20>>
@@ -78,18 +76,48 @@ __global__ void d_knn(int *d_results,
   d_results[tid] = sqrDist;
 }
 
-void knn(int *d_results,
+void knn5(int *d_results,
            Float20 *d_queries,
            int numQueries,
            Float20 *d_nodes,
            int numNodes,
-           float maxRadius,
-           int k)
+           float maxRadius)
 {
   int bs = 128;
   int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius,k);
+  d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
+// ==================================================================
+__global__ void d_knn500(int *d_results,
+                        Float20 *d_queries,
+                        int numQueries,
+                        Float20 *d_nodes,
+                        int numNodes,
+                        float maxRadius)
+{
+  int tid = threadIdx.x+blockIdx.x*blockDim.x;
+  if (tid >= numQueries) return;
+
+  cukd::FixedCandidateList<500> result(maxRadius);
+  float sqrDist
+    = cukd::knn
+    <cukd::TrivialFloatPointTraits<Float20>>
+    (result,d_queries[tid],d_nodes,numNodes);
+  d_results[tid] = sqrDist;
+}
+
+void knn500(int *d_results,
+           Float20 *d_queries,
+           int numQueries,
+           Float20 *d_nodes,
+           int numNodes,
+           float maxRadius)
+{
+  int bs = 128;
+  int nb = cukd::common::divRoundUp(numQueries,bs);
+  d_knn500<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
+}
+// ==================================================================
 
 Float20 *readPoints(int N)
 {
@@ -147,7 +175,6 @@ int main(int ac, const char **av)
   int nQueries = 10*1000*1000;
   int nRepeats = 1;
   int isAssigned = 0;
-  int k = 5;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -161,8 +188,6 @@ int main(int ac, const char **av)
       maxQueryRadius = std::stof(av[++i]);
     else if (arg == "-t")
       isAssigned = i++;
-    else if (arg == "-k")
-      k = atoi(av[++i]);
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
@@ -196,7 +221,10 @@ int main(int ac, const char **av)
     std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++){
-      knn(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius,k);
+      if(nPoints<500)
+        knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+      else
+        knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
     }
     CUKD_CUDA_SYNC_CHECK();
     for (int i=0;i<nRepeats;i++){
