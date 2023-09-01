@@ -101,7 +101,7 @@ void readPoints(int N, Float20 **d_points, Float20 **d_queries)
   while (fgets(line, 200, stream))
   {
     char* tmp = strdup(line);
-    point = *d_points[i]
+    point = *d_points[i];
     point.x = (float)atof(strtok(tmp, " "));
     point.b = (float)atof(strtok(NULL, " "));
     point.c = (float)atof(strtok(NULL, " "));
