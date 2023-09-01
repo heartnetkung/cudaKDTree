@@ -218,7 +218,7 @@ void test_leven(){
 
 int main(int ac, const char **av)
 {
-  test_leven()
+  test_leven();
   using namespace cukd::common;
   
   int nPoints = 173;
