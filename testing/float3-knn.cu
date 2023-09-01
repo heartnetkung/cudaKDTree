@@ -88,7 +88,7 @@ void knn500(int *d_results,
 }
 // ==================================================================
 
-Float20 *readPoints(int N,d_points,d_queries)
+Float20 *readPoints(int N, Float20 *d_points, Float20 *d_queries)
 {
   using namespace cukd::common;
   FILE* stream = fopen("input.txt", "r");
