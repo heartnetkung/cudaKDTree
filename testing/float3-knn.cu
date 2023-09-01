@@ -190,7 +190,7 @@ void test_leven(){
   std::cout << leven1(x,lenX,y,lenY) << "leven1\n";
 
   char x2[] = "555";
-  char y2[] = "55555";
+  char y2[] = "666";
   lenX = 3;
   lenY = 3;
   std::cout << leven1(x2,lenX,y2,lenY) << "leven2\n";
