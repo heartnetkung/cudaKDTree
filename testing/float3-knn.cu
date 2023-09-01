@@ -132,6 +132,21 @@ Float20 *readPoints(int N)
   return d_points;
 }
 
+Float20 *writePoints(int nQueries, int nResult, Float20 *d_results, Float20 *d_points)
+{
+  FILE* stream = fopen("output.txt", "r");
+  for(int j=0;j<nQueries;j++){
+    for(int k=0;k<nResult;k++){
+      int index = d_results[j*nResult+k];
+      if (index != -1){
+        Float20 point = d_points[index];
+        fprintf(stream,"%d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d %d",point.x,point.b,point.c,point.d,point.e,d_points[i].f,point.g,point.h,point.i,point.j,d_points[i].k,point.l,point.m,point.n,point.o,d_points[i].p,point.q,point.r,point.s,point.t,j);
+      }
+    }
+  }
+  fclose(stream);
+}
+
 // ==================================================================
 
 int main(int ac, const char **av)
@@ -178,15 +193,16 @@ int main(int ac, const char **av)
     knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
 
   CUKD_CUDA_SYNC_CHECK();
-  for(int j=0;j<nQueries;j++){
-    std::cout << "j: " << j << " \n";
-    for(int k=0;k<nResult;k++){
-      int index = d_results[j*nResult+k];
-      if (index != -1){
-        Float20 point = d_points[index];
-        std::cout << " closest point is " << point.x << " \n";
-      }
-    }
-  }
+  writePoints(nQueries, nResult, d_results, d_points);
+  // for(int j=0;j<nQueries;j++){
+  //   std::cout << "j: " << j << " \n";
+  //   for(int k=0;k<nResult;k++){
+  //     int index = d_results[j*nResult+k];
+  //     if (index != -1){
+  //       Float20 point = d_points[index];
+  //       std::cout << " closest point is " << point.x << " \n";
+  //     }
+  //   }
+  // }
 
 }
