@@ -24,39 +24,6 @@
 #include <stdlib.h>
 #include <string.h>
 
-Float20 *generatePoints(int N)
-{
-  std::cout << "generating " << N <<  " points" << std::endl;
-  Float20 *d_points = 0;
-  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
-  for (int i=0;i<N;i++) {
-    d_points[i].x = (float)drand48();
-    d_points[i].b = (float)drand48();
-    d_points[i].c = (float)drand48();
-    d_points[i].d = (float)drand48();
-    d_points[i].e = (float)drand48();
-    //5
-    d_points[i].f = (float)drand48();
-    d_points[i].g = (float)drand48();
-    d_points[i].h = (float)drand48();
-    d_points[i].i = (float)drand48();
-    d_points[i].j = (float)drand48();
-    //10
-    d_points[i].k = (float)drand48();
-    d_points[i].l = (float)drand48();
-    d_points[i].m = (float)drand48();
-    d_points[i].n = (float)drand48();
-    d_points[i].o = (float)drand48();
-    //15
-    d_points[i].p = (float)drand48();
-    d_points[i].q = (float)drand48();
-    d_points[i].r = (float)drand48();
-    d_points[i].s = (float)drand48();
-    d_points[i].t = (float)drand48();
-  }
-  return d_points;
-}
-
 // ==================================================================
 __global__ void d_knn5(int *d_results,
                         Float20 *d_queries,
@@ -127,7 +94,9 @@ Float20 *readPoints(int N)
   FILE* stream = fopen("input.txt", "r");
   char line[200];
   Float20 *d_points = 0;
+  Float20 *d_queries = 0;
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_queries,N*sizeof(Float20)));
   int i=0;
 
   while (fgets(line, 200, stream))
@@ -157,13 +126,14 @@ Float20 *readPoints(int N)
     d_points[i].s = (float)atof(strtok(NULL, " "));
     d_points[i].t = (float)atof(strtok(NULL, " "));
 
+    d_queries[i] = d_points[i];
     free(tmp);
     i++;
   }
 
   fclose(stream);
 
-  return d_points;
+  return {d_points,d_queries};
 }
 
 // ==================================================================
@@ -188,14 +158,14 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points = readPoints(nPoints);
-  //HNK manual fix
-  Float20 *d_queries = readPoints(nPoints);
+  Float20 **both_points = readPoints(nPoints);
+  Float20 *d_points = both_points[0];
+  Float20 *d_queries = both_points[1];
 
   cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
 
-  int  *d_results;
+  int *d_results;
   int nResult;
   if(nPoints<500)
     nResult=5;
