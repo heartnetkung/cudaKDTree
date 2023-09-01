@@ -140,7 +140,7 @@ Float20 *writePoints(int nQueries, int nResult, int *d_results, Float20 *d_point
       int index = d_results[j*nResult+k];
       if (index != -1){
         Float20 point = d_points[index];
-        fprintf(stream,"%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f",point.x,point.b,point.c,point.d,point.e,point.f,point.g,point.h,point.i,point.j,point.k,point.l,point.m,point.n,point.o,point.p,point.q,point.r,point.s,point.t,j);
+        fprintf(stream,"%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %d",point.x,point.b,point.c,point.d,point.e,point.f,point.g,point.h,point.i,point.j,point.k,point.l,point.m,point.n,point.o,point.p,point.q,point.r,point.s,point.t,j);
       }
     }
   }
