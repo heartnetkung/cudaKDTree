@@ -87,7 +87,7 @@ void knn(int *d_results,
 {
   int bs = 128;
   int nb = cukd::common::divRoundUp(numQueries,bs);
-  d_knn5<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius,k);
+  d_knn<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius,k);
 }
 
 Float20 *readPoints(int N)
@@ -195,7 +195,7 @@ int main(int ac, const char **av)
     std::cout << "running " << nRepeats << " sets of knn500 queries..." << std::endl;
     double t0 = getCurrentTime();
     for (int i=0;i<nRepeats;i++){
-      knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius,k);
+      knn(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius,k);
     }
     CUKD_CUDA_SYNC_CHECK();
     for (int i=0;i<nRepeats;i++){
