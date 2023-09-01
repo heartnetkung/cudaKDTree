@@ -88,12 +88,12 @@ void knn500(int *d_results,
 }
 // ==================================================================
 
-Float20 *readPoints(int N)
+Float20 *readPoints(int N, Float20* points[])
 {
   using namespace cukd::common;
   FILE* stream = fopen("input.txt", "r");
   char line[200];
-  Float20 *d_points = 0;
+  Float20 *d_points = points[0];
   CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
 
@@ -154,11 +154,10 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points = readPoints(nPoints);
-  //HNK manual fix
-  // Float20 *d_queries = readPoints(nPoints);
-  Float20 *d_queries=0;
-  memcpy(d_queries, d_points, sizeof(d_points));
+  Float20* points[2];
+  readPoints(nPoints,points);
+  Float20* d_points = points[0];
+  Float20* d_queries = points[0];
 
   cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
