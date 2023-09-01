@@ -98,7 +98,7 @@ Float20 *readPoints(int N)
 
   for(int i=0;i<N;i++)
   {
-    fgets(line, 200, stream)
+    fgets(line, 200, stream);
     char* tmp = strdup(line);
     d_points[i].x = (float)atof(strtok(tmp, " "));
     d_points[i].b = (float)atof(strtok(NULL, " "));
