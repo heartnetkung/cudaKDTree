@@ -94,7 +94,7 @@ void readPoints(int N, Float20 **d_points)
   FILE* stream = fopen("input.txt", "r");
   char line[200];
   CUKD_CUDA_CALL(MallocManaged((void**)d_points,N*sizeof(Float20)));
-  CUKD_CUDA_CALL(MallocManaged((void**)d_queries,N*sizeof(Float20)));
+  // CUKD_CUDA_CALL(MallocManaged((void**)d_queries,N*sizeof(Float20)));
   int i=0;
   Float20 point;
 
