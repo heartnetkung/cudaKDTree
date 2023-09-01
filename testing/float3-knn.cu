@@ -88,48 +88,48 @@ void knn500(int *d_results,
 }
 // ==================================================================
 
-void readPoints(int N, Float20 **d_points)
+Float20 *readPoints(int N)
 {
   using namespace cukd::common;
   FILE* stream = fopen("input.txt", "r");
   char line[200];
-  CUKD_CUDA_CALL(MallocManaged((void**)d_points,N*sizeof(Float20)));
-  // CUKD_CUDA_CALL(MallocManaged((void**)d_queries,N*sizeof(Float20)));
+  Float20 *d_points = 0;
+  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
   int i=0;
 
   while (fgets(line, 200, stream))
   {
     char* tmp = strdup(line);
-    ((Float20)*d_points[i]).x = (float)atof(strtok(tmp, " "));
-    ((Float20)*d_points[i]).b = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).c = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).d = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).e = (float)atof(strtok(NULL, " "));
+    d_points[i].x = (float)atof(strtok(tmp, " "));
+    d_points[i].b = (float)atof(strtok(NULL, " "));
+    d_points[i].c = (float)atof(strtok(NULL, " "));
+    d_points[i].d = (float)atof(strtok(NULL, " "));
+    d_points[i].e = (float)atof(strtok(NULL, " "));
     //5
-    ((Float20)*d_points[i]).f = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).g = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).h = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).i = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).j = (float)atof(strtok(NULL, " "));
+    d_points[i].f = (float)atof(strtok(NULL, " "));
+    d_points[i].g = (float)atof(strtok(NULL, " "));
+    d_points[i].h = (float)atof(strtok(NULL, " "));
+    d_points[i].i = (float)atof(strtok(NULL, " "));
+    d_points[i].j = (float)atof(strtok(NULL, " "));
     //10
-    ((Float20)*d_points[i]).k = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).l = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).m = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).n = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).o = (float)atof(strtok(NULL, " "));
+    d_points[i].k = (float)atof(strtok(NULL, " "));
+    d_points[i].l = (float)atof(strtok(NULL, " "));
+    d_points[i].m = (float)atof(strtok(NULL, " "));
+    d_points[i].n = (float)atof(strtok(NULL, " "));
+    d_points[i].o = (float)atof(strtok(NULL, " "));
     //15
-    ((Float20)*d_points[i]).p = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).q = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).r = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).s = (float)atof(strtok(NULL, " "));
-    ((Float20)*d_points[i]).t = (float)atof(strtok(NULL, " "));
+    d_points[i].p = (float)atof(strtok(NULL, " "));
+    d_points[i].q = (float)atof(strtok(NULL, " "));
+    d_points[i].r = (float)atof(strtok(NULL, " "));
+    d_points[i].s = (float)atof(strtok(NULL, " "));
+    d_points[i].t = (float)atof(strtok(NULL, " "));
 
-    // *d_queries[i] = point;
     free(tmp);
     i++;
   }
 
   fclose(stream);
+  return d_points;
 }
 
 // ==================================================================
@@ -154,10 +154,9 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points = 0;
-  Float20 *d_queries = 0;
-  readPoints(nPoints,&d_points);
-  readPoints(nPoints,&d_queries);
+  Float20 *d_points = readPoints(nPoints);
+  //HNK manual fix
+  Float20 *d_queries = readPoints(nPoints);
 
   cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
