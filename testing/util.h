@@ -13,7 +13,8 @@ Float20 intarr2float(int* i){
 }
 
 int* str2intarr(char* str, int str_len){
-	int ans[20]={0};
+	int *ans=0;
+	ans = (int*)calloc(20, sizeof(int));;
 	for(int i=0;i<str_len;i++){
 		char c = str[i];
 		if(c=='A')
@@ -66,7 +67,7 @@ int* str2intarr(char* str, int str_len){
 void test_util(){
 	std::cout << "test_util\n";
 	char x[] = "CAAD";
-	int* temp = str2intarr(x);
+	int* temp = str2intarr(x,4);
 	for(int i=0;i<20;i++)
 		std::cout << temp[i] << "\n";
 	Float20 temp2 = intarr2float(temp);
