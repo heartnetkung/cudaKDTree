@@ -90,69 +90,6 @@ void knn500(int *d_results,
   int nb = cukd::common::divRoundUp(numQueries,bs);
   d_knn500<<<nb,bs>>>(d_results,d_queries,numQueries,d_nodes,numNodes,maxRadius);
 }
-// ==================================================================
-
-Float20 *readPoints(int N)
-{
-  using namespace cukd::common;
-  FILE* stream = fopen("input.txt", "r");
-  char line[200];
-  Float20 *d_points = 0;
-  CUKD_CUDA_CALL(MallocManaged((void**)&d_points,N*sizeof(Float20)));
-  int i=0;
-
-  while (fgets(line, 200, stream))
-  {
-    if(i==N)
-      break;
-
-    char* tmp = strdup(line);
-    d_points[i].x = (float)atof(strtok(tmp, " "));
-    d_points[i].b = (float)atof(strtok(NULL, " "));
-    d_points[i].c = (float)atof(strtok(NULL, " "));
-    d_points[i].d = (float)atof(strtok(NULL, " "));
-    d_points[i].e = (float)atof(strtok(NULL, " "));
-    //5
-    d_points[i].f = (float)atof(strtok(NULL, " "));
-    d_points[i].g = (float)atof(strtok(NULL, " "));
-    d_points[i].h = (float)atof(strtok(NULL, " "));
-    d_points[i].i = (float)atof(strtok(NULL, " "));
-    d_points[i].j = (float)atof(strtok(NULL, " "));
-    //10
-    d_points[i].k = (float)atof(strtok(NULL, " "));
-    d_points[i].l = (float)atof(strtok(NULL, " "));
-    d_points[i].m = (float)atof(strtok(NULL, " "));
-    d_points[i].n = (float)atof(strtok(NULL, " "));
-    d_points[i].o = (float)atof(strtok(NULL, " "));
-    //15
-    d_points[i].p = (float)atof(strtok(NULL, " "));
-    d_points[i].q = (float)atof(strtok(NULL, " "));
-    d_points[i].r = (float)atof(strtok(NULL, " "));
-    d_points[i].s = (float)atof(strtok(NULL, " "));
-    d_points[i].t = (float)atof(strtok(NULL, " "));
-
-    i++;
-    free(tmp);
-  }
-
-  fclose(stream);
-  return d_points;
-}
-
-void writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
-{
-  FILE* stream = fopen("output.txt", "w");
-  for(int j=0;j<nQueries;j++){
-    for(int k=0;k<nResult;k++){
-      int index = d_results[j*nResult+k];
-      if (index != -1){
-        Float20 point = d_points[index];
-        fprintf(stream,"%.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %.0f %d\n",point.x,point.b,point.c,point.d,point.e,point.f,point.g,point.h,point.i,point.j,point.k,point.l,point.m,point.n,point.o,point.p,point.q,point.r,point.s,point.t,j);
-      }
-    }
-  }
-  fclose(stream);
-}
 
 // ==================================================================
 
@@ -161,7 +98,7 @@ int main(int ac, const char **av)
   // test_leven();
   // test_util();
   // test_trie();
-  readContent(5);
+  // readContent(5);
   using namespace cukd::common;
   
   int nPoints = 173;
@@ -180,11 +117,9 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  Float20 *d_points = readPoints(nPoints);
-  //TODO read file only once?
-  Float20 *d_queries = readPoints(nPoints);
+  FileContent content = readContent();
 
-  cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(d_points,nPoints);
+  cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(content.d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
 
   int *d_results;
@@ -199,22 +134,13 @@ int main(int ac, const char **av)
   // ==================================================================
 
   if(nPoints<500)
-    knn5(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+    knn5(d_results,content.d_queries,nQueries,content.d_points,nPoints,maxQueryRadius);
   else
-    knn500(d_results,d_queries,nQueries,d_points,nPoints,maxQueryRadius);
+    knn500(d_results,content.d_queries,nQueries,content.d_points,nPoints,maxQueryRadius);
 
   CUKD_CUDA_SYNC_CHECK();
-  writePoints(nQueries, nResult, d_results, d_points);
-  std::cout << "success\n";
-  // for(int j=0;j<nQueries;j++){
-  //   std::cout << "j: " << j << " \n";
-  //   for(int k=0;k<nResult;k++){
-  //     int index = d_results[j*nResult+k];
-  //     if (index != -1){
-  //       Float20 point = d_points[index];
-  //       std::cout << " closest point is " << point.x << " \n";
-  //     }
-  //   }
-  // }
+  std::vector<int> finalResult = postprocessing(d_results,content,nPoints,nResult);
+  writeFile(finalResult);
 
+  std::cout << "success\n";
 }
