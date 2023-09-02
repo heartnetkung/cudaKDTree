@@ -14,7 +14,6 @@ struct FileContent{
 }
 
 FileContent readContent(int n){
-	using namespace cukd::common;
 	FileContent ans;
 	FILE* stream = fopen("input2.txt", "r");
 	char line[200];

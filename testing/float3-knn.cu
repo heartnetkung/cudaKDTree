@@ -158,9 +158,9 @@ void writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
 
 int main(int ac, const char **av)
 {
-  test_leven();
-  test_util();
-  test_trie();
+  // test_leven();
+  // test_util();
+  // test_trie();
   readContent(5);
   using namespace cukd::common;
   
