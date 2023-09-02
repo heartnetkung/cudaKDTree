@@ -18,6 +18,7 @@
 #include "leven1.h"
 #include "util.h"
 #include "trie.h"
+#include "read_write.h"
 // knn = "k-nearest-neighbor" query
 #include "cukd/knn.h"
 #include <queue>
@@ -160,6 +161,7 @@ int main(int ac, const char **av)
   test_leven();
   test_util();
   test_trie();
+  readContent(5);
   using namespace cukd::common;
   
   int nPoints = 173;
