@@ -14,12 +14,12 @@
 // We will construct a N-ary tree and make it
 // a Trie
 // Since we have at most 10 repeated amino acids
-#define N 10
+// #define N 10
 
 typedef struct TrieNode TrieNode;
 struct TrieNode {
     int data;
-    TrieNode* children[N];
+    TrieNode* children[10];
     int is_leaf;
     std::vector<char*> payload;
     std::vector<int> lengthOfPayload;
@@ -28,7 +28,7 @@ struct TrieNode {
 TrieNode make_trienode(int data) {
     // Allocate memory for a TrieNode
     TrieNode node;
-    for (int i=0; i<N; i++)
+    for (int i=0; i<10; i++)
         node.children[i] = NULL;
     node.is_leaf = 0;
     node.data=data;
