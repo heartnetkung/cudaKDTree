@@ -18,7 +18,7 @@
 
 typedef struct TrieNode TrieNode;
 struct TrieNode {
-    TrieNode children[10];
+    TrieNode* children;
     std::vector<char*> payload;
     std::vector<int> lengthOfPayload;
 };
@@ -26,8 +26,9 @@ struct TrieNode {
 TrieNode make_trienode() {
     // Allocate memory for a TrieNode
     TrieNode node;
+    node.children = malloc(10*sizeof TrieNode)
     for (int i=0; i<10; i++)
-        node.children[i] = NULL;
+        node.children[i] = -1;
     return node;
 }
 
