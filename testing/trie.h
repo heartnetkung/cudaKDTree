@@ -24,7 +24,7 @@ struct TrieNode {
 
 TrieNode* make_trienode() {
     // Allocate memory for a TrieNode
-    TrieNode* node = (TrieNode*)calloc(1, sizeof TrieNode);
+    TrieNode* node = (TrieNode*)calloc(1, sizeof(TrieNode));
     for (int i=0; i<10; i++)
         node->children[i] = NULL;
     return node;
@@ -62,21 +62,21 @@ void test_trie(){
     std::cout << "test trie \n";
     TrieNode* root = make_trienode();
 
-    int* intarr1 = (int*)calloc(20,sizeof int);
+    int* intarr1 = (int*)calloc(20,sizeof(int));
     intarr1[0]=2;
     intarr1[1]=1;
     char cdr31[4] = "CAA";
     int cdr3len1 = 3;
     insert_trie(root,intarr1,cdr31,cdr3len1);
 
-    int* intarr2 = (int*)calloc(20,sizeof int);
+    int* intarr2 = (int*)calloc(20,sizeof(int));
     intarr2[0]=2;
     intarr2[1]=1;
     char cdr32[4] = "AAC";
     int cdr3len2 = 3;
     insert_trie(root,intarr2,cdr32,cdr3len2);
 
-    int* intarr3 = (int*)calloc(20,sizeof int);
+    int* intarr3 = (int*)calloc(20,sizeof(int));
     intarr3[0]=5;
     char cdr33[6] = "AAAAA";
     int cdr3len3 = 5;
