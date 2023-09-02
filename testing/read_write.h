@@ -20,8 +20,9 @@ FileContent readContent(int n){
 	int i = 0;
 	int* intarr;
 	int len_temp;
+	char* tmp;
 
-	ans.str_queries = (char*) malloc(n*sizeof(char*));
+	ans.str_queries = (char**) malloc(n*sizeof(char*));
 	ans.str_len_queries = (int*) malloc(n*sizeof(int));
 	CUKD_CUDA_CALL(MallocManaged((void**)&ans.d_points,n*sizeof(Float20)));
 	CUKD_CUDA_CALL(MallocManaged((void**)&ans.d_queries,n*sizeof(Float20)));
@@ -31,8 +32,8 @@ FileContent readContent(int n){
 		if(i==n)
 			break;
 
-		char* tmp = strdup(line);
-		int len_temp = strlen(tmp);
+		tmp = strdup(line);
+		len_temp = strlen(tmp);
 		ans.str_queries[i] = tmp;
 		ans.str_len_queries[i] = len_temp;
 		intarr = str2intarr(tmp,len_temp);
