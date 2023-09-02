@@ -36,6 +36,8 @@ int leven1(char* x, int lenX, char* y, int lenY){
 }
 
 void test_leven(){
+  std::cout << "test_leven\n";
+
   char x[] = "555";
   char y[] = "55555";
   int lenX = 3;

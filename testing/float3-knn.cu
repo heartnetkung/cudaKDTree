@@ -16,6 +16,7 @@
 
 #include "cukd/builder.h"
 #include "leven1.h"
+#include "util.h"
 // knn = "k-nearest-neighbor" query
 #include "cukd/knn.h"
 #include <queue>
@@ -156,6 +157,7 @@ void writePoints(int nQueries, int nResult, int *d_results, Float20 *d_points)
 int main(int ac, const char **av)
 {
   test_leven();
+  test_util();
   using namespace cukd::common;
   
   int nPoints = 173;
