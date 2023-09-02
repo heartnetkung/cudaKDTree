@@ -91,6 +91,6 @@ std::vector<int> postprocessing(int* d_results, FileContent content, int n, int 
 void writeFile(std::vector<int> finalResult){
 	FILE* stream = fopen("output.txt", "w");
 	for(int i=0;i<finalResult.size();i+=2)
-		fprintf(stream,"%d %d",finalResult.at(i),finalResult.at(i+1));
+		fprintf(stream,"%d %d\n",finalResult.at(i),finalResult.at(i+1));
 	fclose(stream);
 }
