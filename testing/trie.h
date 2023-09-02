@@ -35,7 +35,7 @@ void insert_trie(TrieNode* root, int* intarr,char* cdr3, int cdr3Len){
     for(int i=0;i<20;i++){
         int data = intarr[i];
         if(current->children[data]==NULL)
-            current->children[data]=&make_trienode();
+            current->children[data]=make_trienode();
         current = current->children[data];
     }
     current->payload.push_back(cdr3);
@@ -53,9 +53,9 @@ TrieNode* search_trie(TrieNode* root, int* intarr){
     return current;
 }
 
-void printNode(TrieNode node){
-    for(int i=0;i<node.payload.size();i++)
-        std::cout << node.payload.at(i) << "\n";
+void printNode(TrieNode* node){
+    for(int i=0;i<node->payload.size();i++)
+        std::cout << node->payload.at(i) << "\n";
 }
 
 void test_trie(){
@@ -83,15 +83,15 @@ void test_trie(){
     insert_trie(root,intarr3,cdr33,cdr3len3);
 
     std::cout << "test1 \n";
-    TrieNode test1 = search_trie(root,intarr2);
+    TrieNode* test1 = search_trie(root,intarr2);
     printNode(test1);
 
     std::cout << "test2 \n";
-    TrieNode test2 = search_trie(root,intarr3);
+    TrieNode* test2 = search_trie(root,intarr3);
     printNode(test2);
 
-    int* intarr4 = (int*)calloc(20,sizeof int);
+    int* intarr4 = (int*)calloc(20,sizeof(int));
     std::cout << "test3 \n";
-    TrieNode test3 = search_trie(root,intarr4);
+    TrieNode* test3 = search_trie(root,intarr4);
     printNode(test3);
 }
