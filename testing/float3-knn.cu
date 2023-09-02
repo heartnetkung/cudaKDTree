@@ -117,7 +117,7 @@ int main(int ac, const char **av)
       throw std::runtime_error("known cmdline arg "+arg);
   }
   
-  FileContent content = readContent();
+  FileContent content = readContent(nPoints);
 
   cukd::buildTree<cukd::TrivialFloatPointTraits<Float20>>(content.d_points,nPoints);
   CUKD_CUDA_SYNC_CHECK();
