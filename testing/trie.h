@@ -36,10 +36,9 @@ void insert_trie(TrieNode root, int* intarr,char* cdr3, int cdr3Len){
     for(int i=0;i<20;i++){
         int data = intarr[i];
         if(current.children[data]==NULL)
-            current.children[data]=make_trienode(data);
+            current.children[data]=make_trienode();
         current = current.children[data];
     }
-    current.is_leaf=1;
     current.payload.push_back(cdr3);
     current.lengthOfPayload.push_back(cdr3Len);
 }
@@ -62,7 +61,7 @@ void printNode(TrieNode node){
 
 void test_trie(){
     std::cout << "test trie \n";
-    TrieNode root = make_trienode()
+    TrieNode root = make_trienode();
 
     int* intarr1 = (int*)calloc(20,sizeof int);
     intarr1[0]=2;
