@@ -11,7 +11,7 @@ struct FileContent{
 	char* str_queries;
 	int* str_len_queries;
 	TrieNode* str_queries_index;
-}
+};
 
 FileContent readContent(int n){
 	FileContent ans;
