@@ -18,8 +18,7 @@
 
 struct TrieNode {
     TrieNode* children[10];
-    std::vector<char*> payload;
-    std::vector<int> lengthOfPayload;
+    std::vector<int> payload;
 };
 
 TrieNode* make_trienode() {
@@ -30,7 +29,7 @@ TrieNode* make_trienode() {
     return node;
 }
 
-void insert_trie(TrieNode* root, int* intarr,char* cdr3, int cdr3Len){
+void insert_trie(TrieNode* root, int* intarr,int payload){
     TrieNode* current = root;
     for(int i=0;i<20;i++){
         int data = intarr[i];
@@ -38,8 +37,7 @@ void insert_trie(TrieNode* root, int* intarr,char* cdr3, int cdr3Len){
             current->children[data]=make_trienode();
         current = current->children[data];
     }
-    current->payload.push_back(cdr3);
-    current->lengthOfPayload.push_back(cdr3Len);
+    current->payload.push_back(payload);
 }
 
 TrieNode* search_trie(TrieNode* root, int* intarr){
@@ -65,22 +63,19 @@ void test_trie(){
     int* intarr1 = (int*)calloc(20,sizeof(int));
     intarr1[0]=2;
     intarr1[1]=1;
-    char cdr31[4] = "CAA";
-    int cdr3len1 = 3;
-    insert_trie(root,intarr1,cdr31,cdr3len1);
+    int payload1 = 1;
+    insert_trie(root,intarr1,payload1);
 
     int* intarr2 = (int*)calloc(20,sizeof(int));
     intarr2[0]=2;
     intarr2[1]=1;
-    char cdr32[4] = "AAC";
-    int cdr3len2 = 3;
-    insert_trie(root,intarr2,cdr32,cdr3len2);
+    int payload2 = 2;
+    insert_trie(root,intarr2,payload2);
 
     int* intarr3 = (int*)calloc(20,sizeof(int));
     intarr3[0]=5;
-    char cdr33[6] = "AAAAA";
-    int cdr3len3 = 5;
-    insert_trie(root,intarr3,cdr33,cdr3len3);
+    int payload3 = 3;
+    insert_trie(root,intarr3,payload3);
 
     std::cout << "test1 \n";
     TrieNode* test1 = search_trie(root,intarr2);
