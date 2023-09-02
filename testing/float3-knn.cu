@@ -104,6 +104,7 @@ int main(int ac, const char **av)
   int nPoints = 173;
   float maxQueryRadius = std::numeric_limits<float>::infinity();
   int nQueries = 173;
+  int output=0;
 
   for (int i=1;i<ac;i++) {
     std::string arg = av[i];
@@ -113,6 +114,8 @@ int main(int ac, const char **av)
     }
     else if (arg == "-r")
       maxQueryRadius = std::stof(av[++i]);
+    else if (arg == "-o")
+      output = ++i;
     else
       throw std::runtime_error("known cmdline arg "+arg);
   }
@@ -140,7 +143,8 @@ int main(int ac, const char **av)
 
   CUKD_CUDA_SYNC_CHECK();
   std::vector<int> finalResult = postprocessing(d_results,content,nPoints,nResult);
-  writeFile(finalResult);
+  if(output!=0)
+    writeFile(finalResult);
 
   std::cout << "success\n";
 }
