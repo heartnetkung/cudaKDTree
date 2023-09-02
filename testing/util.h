@@ -30,6 +30,34 @@ void intarr2float(Float20* target, int index, int* i){
 	target[index].t = i[19];
 }
 
+int* float2intarr(Float20 input){
+	int* ans = (int*)malloc(20, sizeof(int));
+	ans[0]=input.x
+	ans[1]=input.b
+	ans[2]=input.c
+	ans[3]=input.d
+	ans[4]=input.e
+	//5
+	ans[5]=input.f
+	ans[6]=input.g
+	ans[7]=input.h
+	ans[8]=input.i
+	ans[9]=input.j
+	//10
+	ans[10]=input.k
+	ans[11]=input.l
+	ans[12]=input.m
+	ans[13]=input.n
+	ans[14]=input.o
+	//15
+	ans[15]=input.p
+	ans[16]=input.q
+	ans[17]=input.r
+	ans[18]=input.s
+	ans[19]=input.t
+	return ans;
+}
+
 int* str2intarr(char* str, int str_len){
 	int *ans=0;
 	ans = (int*)calloc(20, sizeof(int));
@@ -94,4 +122,7 @@ void test_util(){
 	std::cout << temp2[0].b << "a\n";
 	std::cout << temp2[0].c << "a\n";
 	std::cout << temp2[0].d << "a\n";
+	int* temp3 = float2intarr(temp2[0]);
+	for(int i=0;i<20;i++)
+		std::cout << temp3[i] << "b\n";
 }
