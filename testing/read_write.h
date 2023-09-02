@@ -40,7 +40,7 @@ FileContent readContent(int n){
 		intarr = str2intarr(tmp,len_temp);
 		intarr2float(ans.d_points,i,intarr);
 		intarr2float(ans.d_queries,i,intarr);
-		insert_trie(ans.str_queries_index,intarr,tmp,len_temp);
+		insert_trie(ans.str_queries_index,intarr,i);
 
 		i++;
 	}
@@ -57,8 +57,9 @@ std::vector<int> postprocessing(Float20* d_results, FileContent content, int n, 
 	TrieNode* result;
 	char* str1, str2;
 	int strLen1, strLen2, index2;
+	Float20* d_points = content.d_points;
 
-	for(int j=0;j<nQueries;j++){
+	for(int j=0;j<n;j++){
 		str1 = str_queries[j];
 		strLen1 = str_len_queries[j];
 
