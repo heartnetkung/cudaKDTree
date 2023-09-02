@@ -16,7 +16,6 @@
 // Since we have at most 10 repeated amino acids
 // #define N 10
 
-typedef struct TrieNode TrieNode;
 struct TrieNode {
     TrieNode* children;
     std::vector<char*> payload;
@@ -26,7 +25,7 @@ struct TrieNode {
 TrieNode make_trienode() {
     // Allocate memory for a TrieNode
     TrieNode node;
-    node.children = malloc(10*sizeof TrieNode)
+    node.children = malloc(10*sizeof TrieNode);
     for (int i=0; i<10; i++)
         node.children[i] = -1;
     return node;
