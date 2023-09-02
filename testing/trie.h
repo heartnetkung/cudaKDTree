@@ -66,33 +66,33 @@ void test_trie(){
     int* intarr1 = (int*)calloc(20,sizeof int);
     intarr1[0]=2;
     intarr1[1]=1;
-    char* cdr31 = 'CAA';
+    char* cdr31 = "CAA";
     int cdr3len1 = 3;
     insert_trie(root,intarr1,cdr31,cdr3len1);
 
     int* intarr2 = (int*)calloc(20,sizeof int);
     intarr2[0]=2;
     intarr2[1]=1;
-    char* cdr32 = 'AAC';
+    char* cdr32 = "AAC";
     int cdr3len2 = 3;
     insert_trie(root,intarr2,cdr32,cdr3len2);
 
     int* intarr3 = (int*)calloc(20,sizeof int);
     intarr3[0]=5;
-    char* cdr33 = 'AAAAA';
+    char* cdr33 = "AAAAA";
     int cdr3len3 = 5;
     insert_trie(root,intarr3,cdr33,cdr3len3);
 
     std::cout << "test1 \n";
-    TrieNode test1 = search_trie(intarr2);
+    TrieNode test1 = search_trie(root,intarr2);
     printNode(test1);
 
     std::cout << "test2 \n";
-    TrieNode test2 = search_trie(intarr3);
+    TrieNode test2 = search_trie(root,intarr3);
     printNode(test2);
 
     int* intarr4 = (int*)calloc(20,sizeof int);
     std::cout << "test3 \n";
-    TrieNode test3 = search_trie(intarr4);
+    TrieNode test3 = search_trie(root,intarr4);
     printNode(test3);
 }
