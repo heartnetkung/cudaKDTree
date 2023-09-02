@@ -49,7 +49,7 @@ FileContent readContent(int n){
 	return ans;
 }
 
-std::vector<int> postprocessing(Float20* d_results, FileContent content, int n, int nResult){
+std::vector<int> postprocessing(int* d_results, FileContent content, int n, int nResult){
 	std::vector<int> ans, indices;
 	TrieNode* root = content.str_queries_index;
 	char** str_queries = content.str_queries;
