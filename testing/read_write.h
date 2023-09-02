@@ -76,7 +76,7 @@ std::vector<int> postprocessing(int* d_results, FileContent content, int n, int 
 				if(index2==j)
 					continue;
 
-				str2 = str_queries[index2];
+				str2 = (char*)str_queries[index2];
 				strLen2 = str_len_queries[index2];
 				if(leven1(str1,strLen1,str2,strLen2)==1){
 					ans.push_back(j);
