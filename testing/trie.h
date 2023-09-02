@@ -16,12 +16,13 @@
 // Since we have at most 10 repeated amino acids
 #define N 10
 
+typedef struct TrieNode TrieNode;
 struct TrieNode {
     int data;
     TrieNode* children[N];
     int is_leaf;
-    vector<char*> payload;
-    vector<int> lengthOfPayload;
+    std::vector<char*> payload;
+    std::vector<int> lengthOfPayload;
 };
 
 TrieNode make_trienode(int data) {
