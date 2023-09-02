@@ -16,8 +16,8 @@
 
 #include "cukd/builder.h"
 #include "leven1.h"
-#include "trie.h"
 #include "util.h"
+#include "trie.h"
 // knn = "k-nearest-neighbor" query
 #include "cukd/knn.h"
 #include <queue>

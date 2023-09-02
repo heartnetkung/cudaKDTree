@@ -36,6 +36,7 @@ TrieNode make_trienode(int data) {
 }
 
 void test_trie(){
+    std::cout << "test trie \n";
     TrieNode node = make_trienode(5);
     std::cout << node.data << "c \n";
 }
