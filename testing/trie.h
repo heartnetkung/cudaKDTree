@@ -17,7 +17,7 @@
 // #define N 10
 
 struct TrieNode {
-    TrieNode* children;
+    TrieNode* children[10];
     std::vector<char*> payload;
     std::vector<int> lengthOfPayload;
 };
@@ -25,14 +25,13 @@ struct TrieNode {
 TrieNode make_trienode() {
     // Allocate memory for a TrieNode
     TrieNode node;
-    node.children = malloc(10*sizeof TrieNode);
     for (int i=0; i<10; i++)
-        node.children[i] = -1;
+        node.children[i] = NULL;
     return node;
 }
 
 void insert_trie(TrieNode root, int* intarr,char* cdr3, int cdr3Len){
-    TrieNode current = root;
+    struct TrieNode current = root;
     for(int i=0;i<20;i++){
         int data = intarr[i];
         if(current.children[data]==NULL)
