@@ -1,7 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include "cukd/common.h"
+#include "cukd/builder.h"
 #include "trie.h"
 #include "util.h"
 
