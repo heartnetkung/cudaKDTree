@@ -89,9 +89,9 @@ void test_util(){
 	for(int i=0;i<20;i++)
 		std::cout << temp[i] << "\n";
 	Float20* temp2 = (Float20*)calloc(1, sizeof(Float20));
-	intarr2float(temp2,0,temp)
-	std::cout << temp2.x << "a\n";
-	std::cout << temp2.b << "a\n";
-	std::cout << temp2.c << "a\n";
-	std::cout << temp2.d << "a\n";
+	intarr2float(temp2,0,temp);
+	std::cout << temp2[0].x << "a\n";
+	std::cout << temp2[0].b << "a\n";
+	std::cout << temp2[0].c << "a\n";
+	std::cout << temp2[0].d << "a\n";
 }
