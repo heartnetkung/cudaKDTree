@@ -8,7 +8,7 @@
 struct FileContent{
 	Float20* d_points;
 	Float20* d_queries;
-	char* str_queries;
+	char** str_queries;
 	int* str_len_queries;
 	TrieNode* str_queries_index;
 };
@@ -21,14 +21,14 @@ FileContent readContent(int n){
 	int* intarr;
 	int len_temp;
 
-	ans.str_queries = (char*) malloc(n*sizeof(char));
-	ans.str_len_queries = (int*) malloc(n*sizeof*(int));
+	ans.str_queries = (char*) malloc(n*sizeof(char*));
+	ans.str_len_queries = (int*) malloc(n*sizeof(int));
 	CUKD_CUDA_CALL(MallocManaged((void**)&ans.d_points,n*sizeof(Float20)));
 	CUKD_CUDA_CALL(MallocManaged((void**)&ans.d_queries,n*sizeof(Float20)));
 	ans.str_queries_index = make_trienode();
 
 	while (fgets(line, 200, stream)){
-		if(i==N)
+		if(i==n)
 			break;
 
 		char* tmp = strdup(line);
