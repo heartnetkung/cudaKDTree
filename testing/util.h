@@ -4,17 +4,35 @@
 #include "cukd/common.h"
 
 //ACDEFGHIKLMNPQRSTVWY
-Float20 intarr2float(int* i){
-	Float20 ans = {(float)i[0],(float)i[1],(float)i[2],(float)i[3],(float)i[4],
-	(float)i[5],(float)i[6],(float)i[7],(float)i[8],(float)i[9],
-	(float)i[10],(float)i[11],(float)i[12],(float)i[13],(float)i[14],
-	(float)i[15],(float)i[16],(float)i[17],(float)i[18],(float)i[19]};
-	return ans;
+void intarr2float(Float20* target, int index, int* i){
+	target[index].x = i[0];
+	target[index].b = i[1];
+	target[index].c = i[2];
+	target[index].d = i[3];
+	target[index].e = i[4];
+	//5
+	target[index].f = i[5];
+	target[index].g = i[6];
+	target[index].h = i[7];
+	target[index].i = i[8];
+	target[index].j = i[9];
+	//10
+	target[index].k = i[10];
+	target[index].l = i[11];
+	target[index].m = i[12];
+	target[index].n = i[13];
+	target[index].o = i[14];
+	//15
+	target[index].p = i[15];
+	target[index].q = i[16];
+	target[index].r = i[17];
+	target[index].s = i[18];
+	target[index].t = i[19];
 }
 
 int* str2intarr(char* str, int str_len){
 	int *ans=0;
-	ans = (int*)calloc(20, sizeof(int));;
+	ans = (int*)calloc(20, sizeof(int));
 	for(int i=0;i<str_len;i++){
 		char c = str[i];
 		if(c=='A')
@@ -70,7 +88,8 @@ void test_util(){
 	int* temp = str2intarr(x,4);
 	for(int i=0;i<20;i++)
 		std::cout << temp[i] << "\n";
-	Float20 temp2 = intarr2float(temp);
+	Float20* temp2 = (Float20*)calloc(1, sizeof(Float20));
+	intarr2float(temp2,0,temp)
 	std::cout << temp2.x << "a\n";
 	std::cout << temp2.b << "a\n";
 	std::cout << temp2.c << "a\n";
