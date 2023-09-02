@@ -22,33 +22,33 @@ struct TrieNode {
     std::vector<int> lengthOfPayload;
 };
 
-TrieNode make_trienode() {
+TrieNode* make_trienode() {
     // Allocate memory for a TrieNode
-    TrieNode node;
+    TrieNode* node = (TrieNode*)calloc(1, sizeof TrieNode);
     for (int i=0; i<10; i++)
-        node.children[i] = NULL;
+        node->children[i] = NULL;
     return node;
 }
 
-void insert_trie(TrieNode root, int* intarr,char* cdr3, int cdr3Len){
-    struct TrieNode current = root;
+void insert_trie(TrieNode* root, int* intarr,char* cdr3, int cdr3Len){
+    TrieNode* current = root;
     for(int i=0;i<20;i++){
         int data = intarr[i];
-        if(current.children[data]==NULL)
-            current.children[data]=make_trienode();
-        current = current.children[data];
+        if(current->children[data]==NULL)
+            current->children[data]=&make_trienode();
+        current = current->children[data];
     }
-    current.payload.push_back(cdr3);
-    current.lengthOfPayload.push_back(cdr3Len);
+    current->payload.push_back(cdr3);
+    current->lengthOfPayload.push_back(cdr3Len);
 }
 
-TrieNode search_trie(TrieNode root, int* intarr){
-    TrieNode current = root;
+TrieNode* search_trie(TrieNode* root, int* intarr){
+    TrieNode* current = root;
     for(int i=0;i<20;i++){
         int data = intarr[i];
-        if(current.children[data]==NULL)
+        if(current->children[data]==NULL)
             return NULL;
-        current = current.children[data];
+        current = current->children[data];
     }
     return current;
 }
@@ -60,7 +60,7 @@ void printNode(TrieNode node){
 
 void test_trie(){
     std::cout << "test trie \n";
-    TrieNode root = make_trienode();
+    TrieNode* root = make_trienode();
 
     int* intarr1 = (int*)calloc(20,sizeof int);
     intarr1[0]=2;
